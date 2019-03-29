@@ -6,8 +6,8 @@ CREATE TABLE User(
 	password VARCHAR(32) NOT NULL,
 	balance FLOAT(7, 2),
 	cardType VARCHAR(32),
-	cardNumber INT,
-	securityCode INT,
+	cardNumber VARCHAR(32),
+	securityCode VARCHAR(3),
 	expDate DATE
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE Review_user(
 
 CREATE TABLE Banned_user(
 	username VARCHAR(64) PRIMARY KEY,
-	bannedBranding VARCHAR(64),
+	bannedBranding BOOLEAN,
 	bannedDescription VARCHAR(64),
 	FOREIGN KEY(username) REFERENCES User(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
