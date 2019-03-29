@@ -92,10 +92,21 @@ INSERT INTO Developer VALUES('99999', 'Treyarch', NULL);
 INSERT INTO Developer VALUES('00000', 'Bethesda Game Studios', NULL);
 
 INSERT INTO Developer_branch VALUES('66666', '98765', 'Edmonton, Canada');
+INSERT INTO Developer_branch VALUES('66666', '56789', 'Atlanta, Georgia');
 INSERT INTO Developer_branch VALUES('77777', '87654', 'Malmo, Sweden');
+INSERT INTO Developer_branch VALUES('77777', '45678', 'Phoenix, Arizona');
 INSERT INTO Developer_branch VALUES('88888', '76543', 'Tokyo, Japan');
+INSERT INTO Developer_branch VALUES('88888', '34567', 'Osaka, Japan');
 INSERT INTO Developer_branch VALUES('99999', '65432', 'Santa Monica, California');
+INSERT INTO Developer_branch VALUES('99999', '23456', 'San Jose, California');
 INSERT INTO Developer_branch VALUES('00000', '54321', 'Rockville, Maryland');
+INSERT INTO Developer_branch VALUES('00000', '12345', 'Minneapolis, Minnesota');
+
+UPDATE Developer SET mainBranch = '98765' WHERE developerID = '66666';
+UPDATE Developer SET mainBranch = '87654' WHERE developerID = '77777';
+UPDATE Developer SET mainBranch = '76543' WHERE developerID = '88888';
+UPDATE Developer SET mainBranch = '65432' WHERE developerID = '99999';
+UPDATE Developer SET mainBranch = '54321' WHERE developerID = '00000';
 
 INSERT INTO Develops VALUES('66666', '11111');
 INSERT INTO Develops VALUES('77777', '22222');
