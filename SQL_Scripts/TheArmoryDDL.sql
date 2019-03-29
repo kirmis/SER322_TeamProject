@@ -82,7 +82,7 @@ CREATE TABLE Develops(
 
 CREATE TABLE Genre(
 	type VARCHAR(32) PRIMARY KEY,
-	description VARCHAR(64)
+	description VARCHAR(300)
 );
 
 CREATE TABLE Is_a(
@@ -105,14 +105,16 @@ CREATE TABLE Review(
 );
 
 CREATE TABLE Uses(
-	username VARCHAR(64) PRIMARY KEY,
+	username VARCHAR(64),
 	platformType VARCHAR(32),
+	PRIMARY KEY(username, platformType),
 	FOREIGN KEY(username) REFERENCES User(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 	
 CREATE TABLE Available_on(
-	gameID VARCHAR(64) PRIMARY KEY,
+	gameID VARCHAR(64),
 	platformType VARCHAR(32),
+	PRIMARY KEY(gameID, platformType),
 	FOREIGN KEY(gameID) REFERENCES Game(gameID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
