@@ -21,7 +21,7 @@ CREATE TABLE Premium_user(
 
 CREATE TABLE Review_user(
 	username VARCHAR(64) PRIMARY KEY,
-	earlyAcess BOOLEAN,
+	earlyAccess BOOLEAN,
 	FOREIGN KEY(username) REFERENCES User(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -48,6 +48,7 @@ CREATE TABLE Game(
 	gameName VARCHAR(64),
 	releaseDate DATE,
 	reviewReleasDate DATE,
+    price FLOAT(8,2),
 	publisherID VARCHAR(32),
 	FOREIGN KEY(publisherID) REFERENCES Publisher(publisherID) ON UPDATE CASCADE ON DELETE CASCADE
 );

@@ -54,11 +54,11 @@ INSERT INTO Publisher VALUES('34567', 'Nintendo', 'Kyoto, Japan');
 INSERT INTO Publisher VALUES('45678', 'Activision', 'Santa Monica, California');
 INSERT INTO Publisher VALUES('56789', 'Bethesda', 'Rockville, Maryland');
 
-INSERT INTO Game VALUES('11111', 'Anthem', '2019-02-22', '2019-02-22', '12345');
-INSERT INTO Game VALUES('22222', 'Tom Clancys The Division', '2019-03-15', '2019-03-08', '23456');
-INSERT INTO Game VALUES('33333', 'Super Smash Bros. Ultimate', '2018-12-07', '2018-12-07', '34567');
-INSERT INTO Game VALUES('44444', 'Call of Duty: Black Ops 4', '2018-10-12', '2018-10-12', '45678');
-INSERT INTO Game VALUES('55555', 'Fallout 76', '2019-02-22', '2018-11-14', '56789');
+INSERT INTO Game VALUES('11111', 'Anthem', '2019-02-22', '2019-02-22', 59.99, '12345');
+INSERT INTO Game VALUES('22222', 'Tom Clancys The Division', '2019-03-15', '2019-03-08', 59.99, '23456');
+INSERT INTO Game VALUES('33333', 'Super Smash Bros. Ultimate', '2018-12-07', '2018-12-07', 59.99, '34567');
+INSERT INTO Game VALUES('44444', 'Call of Duty: Black Ops 4', '2018-10-12', '2018-10-12', 100.99, '45678');
+INSERT INTO Game VALUES('55555', 'Fallout 76', '2019-02-22', '2018-11-14', 34.99, '56789');
 
 INSERT INTO Owns VALUES('rkirmis', '22222');
 INSERT INTO Owns VALUES('mramirez', '11111');
