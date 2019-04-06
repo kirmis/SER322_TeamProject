@@ -1,0 +1,21 @@
+# Compiled class file
+*.class
+
+# Eclipse Core		
+.project
+.metadata
+.recommenders
+**/bin/*
+
+# JDT-specific (Eclipse Java Development Tools)		
+.classpath
+
+### Gradle ###
+.gradle
+**/build/*
+
+#Mac DS file
+.DS_Store
+
+#Other
+/bin/
