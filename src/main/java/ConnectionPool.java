@@ -11,7 +11,8 @@ public class ConnectionPool {
 	
 	private ConnectionPool() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conns = new Stack<Connection>();
+			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 		} catch (ClassNotFoundException e1) {
 			System.out.println("ERROR: Driver class not found. DatabaseManager not created.");
 			e1.printStackTrace();
@@ -24,25 +25,20 @@ public class ConnectionPool {
 		}
 	}
 	
-	public ConnectionPool getInstance() {
+	public static ConnectionPool getInstance() {
 		if (singleInstance == null)
 			return new ConnectionPool();
 		
 		return singleInstance;
 	}
 	
-	public Connection getConnection() {
+	public Connection getConnection() throws SQLException {
 		Connection conn = null;
 		
 		if (!conns.isEmpty()) {
 			return conns.pop();
 		} else {
-			try {
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/TheArmory", "user", "password");
-			} catch (SQLException e1) {
-				System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
-				e1.printStackTrace();
-			}
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/TheArmory", "armoryuser", "pass");
 		}
 		
 		return conn;

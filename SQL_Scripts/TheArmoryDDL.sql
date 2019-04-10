@@ -47,7 +47,7 @@ CREATE TABLE Game(
 	gameID VARCHAR(32) PRIMARY KEY,
 	gameName VARCHAR(64),
 	releaseDate DATE,
-	reviewReleasDate DATE,
+	reviewReleaseDate DATE,
     price FLOAT(8,2),
 	publisherID VARCHAR(32),
 	FOREIGN KEY(publisherID) REFERENCES Publisher(publisherID) ON UPDATE CASCADE ON DELETE CASCADE
