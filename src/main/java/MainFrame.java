@@ -91,8 +91,6 @@ public class MainFrame {
 			games.addElement(userGames.get(i)); 
 		}
 		
-		games.addElement(dbMgr.getGameInfo("Anthem"));
-		
 		JList listGames = new JList(games);
 		scrollPane.setViewportView(listGames);
 		
