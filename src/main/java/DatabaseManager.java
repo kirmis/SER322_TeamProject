@@ -234,13 +234,13 @@ public class DatabaseManager {
 	/**
 	 * Inserts a new premium user into the database.
 	 * 
-	 * @param userID foreign key to user
+	 * @param username foreign key to user
 	 * @param discountedGames boolean for whether user has access to discounted games
 	 * @param playOnline boolean for whether user can play online
 	 * @param renewalDate renewal date for user's premium membership
 	 * @return boolean value whether transaction was successful
 	 */
-	public boolean insertPremiumUser(String userID, boolean discountedGames, boolean playOnline, 
+	public boolean insertPremiumUser(String username, boolean discountedGames, boolean playOnline, 
 			Date renewalDate) {
 		// declaring connections
 		Connection conn = null;
@@ -252,11 +252,143 @@ public class DatabaseManager {
 			conn = connPool.getConnection(); // get new connection
 			
 			stmt = conn.prepareStatement((String) queries.get("INSERT_PREMIUM_USER"));
-			stmt.setString(1, userID);
+			stmt.setString(1, username);
 			stmt.setBoolean(2, discountedGames);
 			stmt.setBoolean(3, playOnline);
 			stmt.setDate(4, renewalDate);
 			
+			rs = stmt.executeQuery();
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+			result = false; // set return to false
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Inserts a new review user into the database.
+	 * 
+	 * @param username foreign key to user
+	 * @param earlyAccess boolean for whether user has early access
+	 * @return boolean value whether transaction was successful
+	 */
+	public boolean insertReviewUser(String username, boolean earlyAccess) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean result = true;
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("INSERT_REVIEW_USER"));
+			stmt.setString(1, username);
+			stmt.setBoolean(2, earlyAccess);
+			
+			rs = stmt.executeQuery();
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+			result = false; // set return to false
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Inserts a new banned user into the database.
+	 * 
+	 * @param username foreign key to user
+	 * @param bannedBranding the banned branding
+	 * @param bannedDesription the description for being banned
+	 * @return boolean value whether transaction was successful
+	 */
+	public boolean insertBannedUser(String username, boolean bannedBranding, String bannedDesription) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean result = true;
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("INSERT_BANNED_USER"));
+			stmt.setString(1, username);
+			stmt.setBoolean(2, bannedBranding);
+			stmt.setString(3, bannedDesription);
+			
+			rs = stmt.executeQuery();
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+			result = false; // set return to false
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Inserts a new system administrator into the database.
+	 * 
+	 * @param username foreign key to user
+	 * @return boolean value whether transaction was successful
+	 */
+	public boolean insertSystemAdmin(String username) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean result = true;
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("INSERT_SYSTEM_ADMIN"));
+			stmt.setString(1, username);
+
 			rs = stmt.executeQuery();
 		} 
 		catch (SQLException e1) {
@@ -310,6 +442,101 @@ public class DatabaseManager {
 			stmt.setDouble(5, price);
 			stmt.setString(6, publisherID);
 			
+			rs = stmt.executeQuery();
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+			result = false; // set return to false
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Adds a game to user's owned games.
+	 * 
+	 * @param username the username 
+	 * @param gameID the ID of the game being added to the user
+	 * @return boolean value whether transaction was successful
+	 */
+	public boolean addGameToUser(String username, String gameID) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean result = true;
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("INSERT_OWNS"));
+			stmt.setString(1, username);
+			stmt.setString(2, gameID);
+
+			rs = stmt.executeQuery();
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+			result = false; // set return to false
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Inserts a new review into the database.
+	 * 
+	 * @param title the title of the review
+	 * @param rating the rating of the review
+	 * @param gameID the ID of the game being reviewed
+	 * @param reviewerUsername the username of the user who created the review
+	 * @param datePosted the date the review was posted
+	 * @return boolean value whether transaction was successful
+	 */
+	public boolean insertReview(String title, double rating, String gameID, String reviewerUsername,
+			Date datePosted) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean result = true;
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("INSERT_REVIEW"));
+			stmt.setString(1, title);
+			stmt.setDouble(2, rating);
+			stmt.setString(3, gameID);
+			stmt.setString(4, reviewerUsername);
+			stmt.setDate(5, datePosted);
+
 			rs = stmt.executeQuery();
 		} 
 		catch (SQLException e1) {
