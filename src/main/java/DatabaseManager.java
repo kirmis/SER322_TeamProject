@@ -30,7 +30,7 @@ public class DatabaseManager {
 		// reading in queries from queries.properties
 		queries = new Properties();
 		try {
-			queries.load(this.getClass().getResourceAsStream("/main/resources/util/queries.properties"));
+			queries.load(this.getClass().getResourceAsStream("/util/queries.properties"));
 		} catch (IOException e1) {
 			System.out.println("ERROR: Unable to access queries.properties file.");
 			e1.printStackTrace();

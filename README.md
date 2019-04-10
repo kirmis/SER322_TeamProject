@@ -23,4 +23,13 @@ INSTRUCTIONS FOR SETTING UP APPLICATION:
     
 3. The application can be started through Gradle. When in the home directory of the project, enter 
    "gradle run" to launch the application.
+   
+
+FOR SETTING UP IN ECLIPSE:
+
+1. Import project by going to File->New->Java Project. Unselect "Use default location" and choose the directory of the project (this file's parent directory). Click Finish.
+
+2. Ensure that the JDBC driver is part of the build path by right-clicking the project in the Package Explorer and going to Build Path->Configure Build Path. Under the "Libraries" tab, select "Add JARS" and navigate to lib/mysql-connector-java-8.0.15.jar. Select OK then "Apply and close".
+
+3. Ensure src/main/resources directory is part of classpath by right clicking on project in the Package Explorer and going to Run As->Run Configurations. Under the "Classpath" tab, select "User Entries", then the "Advanced" button on the right. Select "Add Folders" and navigate to the src/main/resources directory. Select OK then Apply. The application should be able to run by starting from the MainFrame.java class now.
 
