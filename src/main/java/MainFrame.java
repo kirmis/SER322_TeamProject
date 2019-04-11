@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JButton;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
@@ -16,6 +17,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 
 import javax.swing.JTextPane;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -76,7 +79,7 @@ public class MainFrame {
 		contentPane = new JPanel();
 		contentPane.setLayout(null);
 		contentPane.setBounds(100, 100, 700, 700);
-		contentPane.setBackground(new Color(0, 204, 153));
+		contentPane.setBackground(Color.DARK_GRAY);
 		
 		lblTheArmory = new JLabel("The Armory");
 		lblTheArmory.setForeground(new Color(0, 102, 255));
@@ -93,16 +96,21 @@ public class MainFrame {
 		contentPane.add(btnSearch);
 		
 		lblUserTitle = new JLabel("Username - rank");
+		lblUserTitle.setForeground(Color.LIGHT_GRAY);
 		lblUserTitle.setBounds(16, 115, 106, 16);
 		contentPane.add(lblUserTitle);
 		
 		lblYourGames = new JLabel("Your Games");
+		lblYourGames.setForeground(Color.LIGHT_GRAY);
 		lblYourGames.setFont(new Font("Lucida Grande", Font.PLAIN, 46));
 		lblYourGames.setBounds(28, 156, 291, 45);
 		contentPane.add(lblYourGames);
 		
 		currentGamePane = new JTextPane();
+		currentGamePane.setFont(new Font("Lao MN", Font.PLAIN, 16));
 		currentGamePane.setBounds(341, 213, 342, 227);
+		currentGamePane.setEditable(false);
+		currentGamePane.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		contentPane.add(currentGamePane);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -113,12 +121,18 @@ public class MainFrame {
 		gamesList = new JList();
 		scrollPane.setViewportView(gamesList);
 		this.refreshGameList();
+		gamesList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		gamesList.addListSelectionListener(new ListSelectionListener () {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				int index = gamesList.getSelectedIndex();
 				String gameName = gamesListModel.getElementAt(index).toString();
-				currentGamePane.setText(dbMgr.getGameInfoByName(gameName));
+				List<String> gameInfo = dbMgr.getGameInfoByName(gameName);
+				List<String> pubInfo = dbMgr.getPublisherByGame(gameInfo.get(0));
+				currentGamePane.setText(gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
+						+ "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
+						+ gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
+						+ pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2));
 			}
 		});
 		

@@ -516,14 +516,14 @@ public class DatabaseManager {
 	 * Returns all of a game's attributes by game name.
 	 * 
 	 * @param gameName the name of the game
-	 * @return string containing all the information for a game (separated by tabs)
+	 * @return list containing all the information for a game (separated by tabs)
 	 */
-	public String getGameInfoByName(String gameName) {
+	public List<String> getGameInfoByName(String gameName) {
 		// declaring connections
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String gameInfo = "";
+		List<String> gameInfo = new ArrayList<String>();
 		
 		try {
 			conn = connPool.getConnection(); // get new connection
@@ -534,8 +534,12 @@ public class DatabaseManager {
 			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
-				gameInfo = rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
-						rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6);
+				gameInfo.add(rs.getString(1));
+				gameInfo.add(rs.getString(2));
+				gameInfo.add(rs.getString(3));
+				gameInfo.add(rs.getString(4));
+				gameInfo.add(rs.getString(5));
+				gameInfo.add(rs.getString(6));
 			}
 		} 
 		catch (SQLException e1) {
@@ -562,14 +566,14 @@ public class DatabaseManager {
 	 * Returns all of a game's attributes by game ID.
 	 * 
 	 * @param gameID the ID of the game
-	 * @return string containing all the information for a game (separated by tabs)
+	 * @return list containing all the information for a game (separated by tabs)
 	 */
-	public String getGameInfoByID(String gameID) {
+	public List<String> getGameInfoByID(String gameID) {
 		// declaring connections
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String gameInfo = "";
+		List<String> gameInfo = new ArrayList<String>();
 		
 		try {
 			conn = connPool.getConnection(); // get new connection
@@ -580,8 +584,12 @@ public class DatabaseManager {
 			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
-				gameInfo = rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
-						rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6);
+				gameInfo.add(rs.getString(1));
+				gameInfo.add(rs.getString(2));
+				gameInfo.add(rs.getString(3));
+				gameInfo.add(rs.getString(4));
+				gameInfo.add(rs.getString(5));
+				gameInfo.add(rs.getString(6));
 			}
 		} 
 		catch (SQLException e1) {
@@ -604,5 +612,50 @@ public class DatabaseManager {
 		return gameInfo;
 	}
 	
-	
+	/**
+	 * Returns the publisher of a specific game.
+	 * 
+	 * @param gameID the ID of the specific game
+	 * @return list containing all the information for a publisher
+	 */
+	public List<String> getPublisherByGame(String gameID) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<String> pubInfo = new ArrayList<String>(); // list for publisher information
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("GET_PUBLISHER_BY_GAME"));
+			stmt.setString(1, gameID);
+			
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				pubInfo.add(rs.getString(1));
+				pubInfo.add(rs.getString(2));
+				pubInfo.add(rs.getString(3));
+			}
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return pubInfo;
+	}
 }
