@@ -40,143 +40,6 @@ public class DatabaseManager {
 	}
 	
 	/**
-	 * Gets all game titles that a user owns.
-	 * 
-	 * @param username the username
-	 * @return list of game titles
-	 */
-	public List<String> getGameTitles(String username) {
-		// declaring connections
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		List<String> userGames = new ArrayList<String>();
-		
-		try {
-			conn = connPool.getConnection(); // get new connection
-			
-			stmt = conn.prepareStatement((String) queries.get("GET_GAMES_FOR_USER"));
-			stmt.setString(1, username);
-			
-			rs = stmt.executeQuery();
-			
-			while (rs.next()) { // add the game titles to a list of strings
-				userGames.add(rs.getString(1));
-			}
-		} 
-		catch (SQLException e1) {
-			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
-			e1.printStackTrace();
-		} 
-		finally {
-			try {
-				// closing connections
-				if (conn != null) conn.close();
-				if (stmt != null) stmt.close();
-				if (rs != null) rs.close();
-			} 
-			catch (SQLException e1) {
-				System.out.println("ERROR: Connection to database could not be closed");
-				e1.printStackTrace();
-			}
-		}
-		
-		return userGames;
-	}
-	
-	/**
-	 * Returns all of a game's attributes by game name.
-	 * 
-	 * @param gameName the name of the game
-	 * @return string containing all the information for a game (separated by tabs)
-	 */
-	public String getGameInfoByName(String gameName) {
-		// declaring connections
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		String gameInfo = "";
-		
-		try {
-			conn = connPool.getConnection(); // get new connection
-			
-			stmt = conn.prepareStatement((String) queries.get("GET_GAME_INFO_BY_NAME"));
-			stmt.setString(1, gameName);
-			
-			rs = stmt.executeQuery();
-			
-			while (rs.next()) {
-				gameInfo = rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
-						rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6);
-			}
-		} 
-		catch (SQLException e1) {
-			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
-			e1.printStackTrace();
-		} 
-		finally {
-			try {
-				// closing connections
-				if (conn != null) conn.close();
-				if (stmt != null) stmt.close();
-				if (rs != null) rs.close();
-			} 
-			catch (SQLException e1) {
-				System.out.println("ERROR: Connection to database could not be closed");
-				e1.printStackTrace();
-			}
-		}
-		
-		return gameInfo;
-	}
-	
-	/**
-	 * Returns all of a game's attributes by game ID.
-	 * 
-	 * @param gameID the ID of the game
-	 * @return string containing all the information for a game (separated by tabs)
-	 */
-	public String getGameInfoByID(String gameID) {
-		// declaring connections
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		String gameInfo = "";
-		
-		try {
-			conn = connPool.getConnection(); // get new connection
-			
-			stmt = conn.prepareStatement((String) queries.get("GET_GAME_INFO_BY_ID"));
-			stmt.setString(1, gameID);
-			
-			rs = stmt.executeQuery();
-			
-			while (rs.next()) {
-				gameInfo = rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
-						rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6);
-			}
-		} 
-		catch (SQLException e1) {
-			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
-			e1.printStackTrace();
-		} 
-		finally {
-			try {
-				// closing connections
-				if (conn != null) conn.close();
-				if (stmt != null) stmt.close();
-				if (rs != null) rs.close();
-			} 
-			catch (SQLException e1) {
-				System.out.println("ERROR: Connection to database could not be closed");
-				e1.printStackTrace();
-			}
-		}
-		
-		return gameInfo;
-	}
-	
-	/**
 	 * Inserts a new user into the database.
 	 * 
 	 * @param username the username
@@ -559,4 +422,187 @@ public class DatabaseManager {
 		
 		return result;
 	}
+	
+	/**
+	 * Adds a platform to a user's owned platform types.
+	 * 
+	 * @param username the username
+	 * @param platformType the type of platform
+	 * @return boolean value whether transaction was successful
+	 */
+	public boolean addPlatformToUser(String username, String platformType) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		boolean result = true;
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("INSERT_USES"));
+			stmt.setString(1, username);
+			stmt.setString(2, platformType);
+
+			rs = stmt.executeQuery();
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+			result = false; // set return to false
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Gets all game titles that a user owns.
+	 * 
+	 * @param username the username
+	 * @return list of game titles
+	 */
+	public List<String> getGameTitles(String username) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<String> userGames = new ArrayList<String>();
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("GET_GAMES_FOR_USER"));
+			stmt.setString(1, username);
+			
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) { // add the game titles to a list of strings
+				userGames.add(rs.getString(1));
+			}
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return userGames;
+	}
+	
+	/**
+	 * Returns all of a game's attributes by game name.
+	 * 
+	 * @param gameName the name of the game
+	 * @return string containing all the information for a game (separated by tabs)
+	 */
+	public String getGameInfoByName(String gameName) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String gameInfo = "";
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("GET_GAME_INFO_BY_NAME"));
+			stmt.setString(1, gameName);
+			
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				gameInfo = rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
+						rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6);
+			}
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return gameInfo;
+	}
+	
+	/**
+	 * Returns all of a game's attributes by game ID.
+	 * 
+	 * @param gameID the ID of the game
+	 * @return string containing all the information for a game (separated by tabs)
+	 */
+	public String getGameInfoByID(String gameID) {
+		// declaring connections
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String gameInfo = "";
+		
+		try {
+			conn = connPool.getConnection(); // get new connection
+			
+			stmt = conn.prepareStatement((String) queries.get("GET_GAME_INFO_BY_ID"));
+			stmt.setString(1, gameID);
+			
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				gameInfo = rs.getString(1) + "\t" + rs.getString(2) + "\t" + rs.getString(3) + "\t" +
+						rs.getString(4) + "\t" + rs.getString(5) + "\t" + rs.getString(6);
+			}
+		} 
+		catch (SQLException e1) {
+			System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+			e1.printStackTrace();
+		} 
+		finally {
+			try {
+				// closing connections
+				if (conn != null) conn.close();
+				if (stmt != null) stmt.close();
+				if (rs != null) rs.close();
+			} 
+			catch (SQLException e1) {
+				System.out.println("ERROR: Connection to database could not be closed");
+				e1.printStackTrace();
+			}
+		}
+		
+		return gameInfo;
+	}
+	
+	
 }

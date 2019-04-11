@@ -19,12 +19,15 @@ import java.util.Properties;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JList;
+import javax.swing.JPanel;
+
 import java.awt.Component;
 import javax.swing.Box;
 
 public class MainFrame {
 
 	private JFrame frame;
+	private JPanel contentPane;
 	private DatabaseManager dbMgr;
 
 	/**
@@ -48,7 +51,7 @@ public class MainFrame {
 	 * Create the application.
 	 */
 	public MainFrame() {
-		dbMgr = new DatabaseManager();
+		dbMgr = new DatabaseManager(); // initializing database manager
 		initialize();
 	}
 
@@ -57,16 +60,20 @@ public class MainFrame {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(0, 204, 153));
 		frame.setBounds(100, 100, 700, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		
+		contentPane = new JPanel();
+		contentPane.setLayout(null);
+		contentPane.setBounds(100, 100, 700, 700);
+		contentPane.setBackground(new Color(0, 204, 153));
 		
 		JLabel lblTheArmory = new JLabel("The Armory");
 		lblTheArmory.setForeground(new Color(0, 102, 255));
 		lblTheArmory.setBounds(6, 6, 430, 100);
 		lblTheArmory.setFont(new Font("Optima", Font.BOLD, 82));
-		frame.getContentPane().setLayout(null);
-		frame.getContentPane().add(lblTheArmory);
+		contentPane.add(lblTheArmory);
 		
 		JButton btnSearch = new JButton("Search Games");
 		btnSearch.addActionListener(new ActionListener() {
@@ -74,15 +81,15 @@ public class MainFrame {
 			}
 		});
 		btnSearch.setBounds(566, 116, 117, 29);
-		frame.getContentPane().add(btnSearch);
+		contentPane.add(btnSearch);
 		
 		JLabel lblUserTitle = new JLabel("Username - rank");
 		lblUserTitle.setBounds(16, 115, 106, 16);
-		frame.getContentPane().add(lblUserTitle);
+		contentPane.add(lblUserTitle);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(16, 213, 667, 445);
-		frame.getContentPane().add(scrollPane);
+		contentPane.add(scrollPane);
 		
 		DefaultListModel games = new DefaultListModel();
 		List<String> userGames = dbMgr.getGameTitles("mramirez");
@@ -97,11 +104,13 @@ public class MainFrame {
 		JLabel lblYourGames = new JLabel("Your Games");
 		lblYourGames.setFont(new Font("Lucida Grande", Font.PLAIN, 46));
 		lblYourGames.setBounds(28, 156, 291, 45);
-		frame.getContentPane().add(lblYourGames);
+		contentPane.add(lblYourGames);
 		
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		horizontalStrut.setForeground(Color.BLACK);
 		horizontalStrut.setBounds(6, 102, 687, 12);
-		frame.getContentPane().add(horizontalStrut);
+		contentPane.add(horizontalStrut);
+		
+		frame.add(contentPane);
 	}
 }
