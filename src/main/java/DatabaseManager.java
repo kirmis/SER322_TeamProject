@@ -424,7 +424,7 @@ public class DatabaseManager {
 	}
 	
 	/**
-	 * Adds a platform to a user's owned platform types.
+	 * Adds a platform to a user's owned platforms.
 	 * 
 	 * @param username the username
 	 * @param platformType the type of platform
@@ -483,7 +483,7 @@ public class DatabaseManager {
 		try {
 			conn = connPool.getConnection(); // get new connection
 			
-			stmt = conn.prepareStatement((String) queries.get("GET_GAMES_FOR_USER"));
+			stmt = conn.prepareStatement((String) queries.get("GET_USER_GAME_TITLES"));
 			stmt.setString(1, username);
 			
 			rs = stmt.executeQuery();

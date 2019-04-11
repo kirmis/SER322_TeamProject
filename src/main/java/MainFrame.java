@@ -9,26 +9,32 @@ import javax.swing.JButton;
 import javax.swing.DefaultListModel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
-import java.util.Properties;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-import java.awt.Component;
-import javax.swing.Box;
+import javax.swing.JTextPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class MainFrame {
 
 	private JFrame frame;
 	private JPanel contentPane;
+	private JList gamesList;
+	private JLabel lblYourGames;
+	private JLabel lblUserTitle;
+	private JLabel lblTheArmory;
+	private JButton btnSearch;
+	
+	private DefaultListModel<String> gamesListModel;
+	
 	private DatabaseManager dbMgr;
+	
+	private String username;
+	private JTextPane currentGamePane;
 
 	/**
 	 * Launch the application.
@@ -52,6 +58,9 @@ public class MainFrame {
 	 */
 	public MainFrame() {
 		dbMgr = new DatabaseManager(); // initializing database manager
+		
+		username = "mramirez"; // need login
+		
 		initialize();
 	}
 
@@ -69,13 +78,13 @@ public class MainFrame {
 		contentPane.setBounds(100, 100, 700, 700);
 		contentPane.setBackground(new Color(0, 204, 153));
 		
-		JLabel lblTheArmory = new JLabel("The Armory");
+		lblTheArmory = new JLabel("The Armory");
 		lblTheArmory.setForeground(new Color(0, 102, 255));
 		lblTheArmory.setBounds(6, 6, 430, 100);
 		lblTheArmory.setFont(new Font("Optima", Font.BOLD, 82));
 		contentPane.add(lblTheArmory);
 		
-		JButton btnSearch = new JButton("Search Games");
+		btnSearch = new JButton("Search Games");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -83,34 +92,47 @@ public class MainFrame {
 		btnSearch.setBounds(566, 116, 117, 29);
 		contentPane.add(btnSearch);
 		
-		JLabel lblUserTitle = new JLabel("Username - rank");
+		lblUserTitle = new JLabel("Username - rank");
 		lblUserTitle.setBounds(16, 115, 106, 16);
 		contentPane.add(lblUserTitle);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(16, 213, 667, 445);
-		contentPane.add(scrollPane);
-		
-		DefaultListModel games = new DefaultListModel();
-		List<String> userGames = dbMgr.getGameTitles("mramirez");
-		
-		for (int i = 0; i < userGames.size(); i++) {
-			games.addElement(userGames.get(i)); 
-		}
-		
-		JList listGames = new JList(games);
-		scrollPane.setViewportView(listGames);
-		
-		JLabel lblYourGames = new JLabel("Your Games");
+		lblYourGames = new JLabel("Your Games");
 		lblYourGames.setFont(new Font("Lucida Grande", Font.PLAIN, 46));
 		lblYourGames.setBounds(28, 156, 291, 45);
 		contentPane.add(lblYourGames);
 		
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		horizontalStrut.setForeground(Color.BLACK);
-		horizontalStrut.setBounds(6, 102, 687, 12);
-		contentPane.add(horizontalStrut);
+		currentGamePane = new JTextPane();
+		currentGamePane.setBounds(341, 213, 342, 227);
+		contentPane.add(currentGamePane);
 		
-		frame.add(contentPane);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(16, 213, 303, 445);
+		contentPane.add(scrollPane);
+		
+		gamesListModel = new DefaultListModel<String>();
+		gamesList = new JList();
+		scrollPane.setViewportView(gamesList);
+		this.refreshGameList();
+		gamesList.addListSelectionListener(new ListSelectionListener () {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				int index = gamesList.getSelectedIndex();
+				String gameName = gamesListModel.getElementAt(index).toString();
+				currentGamePane.setText(dbMgr.getGameInfoByName(gameName));
+			}
+		});
+		
+		frame.getContentPane().add(contentPane);
+	}
+	
+	public void refreshGameList() {
+		gamesListModel.clear();
+		List<String> userGames = dbMgr.getGameTitles(username);
+		
+		for (int i = 0; i < userGames.size(); i++) {
+			gamesListModel.addElement(userGames.get(i)); 
+		}
+		
+		gamesList.setModel(gamesListModel);
 	}
 }
