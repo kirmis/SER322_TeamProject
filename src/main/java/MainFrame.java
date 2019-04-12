@@ -73,7 +73,7 @@ public class MainFrame {
         dbMgr = new DatabaseManager();
 	    LoginDialog login = new LoginDialog(frame, dbMgr);
 	    login.setVisible(true);
-	    username = login.getUsername(); // initializing database manager
+	    username = login.getUsernameField(); // initializing database manager
 	    // need login
 
 		initialize();

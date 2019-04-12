@@ -93,6 +93,55 @@ public class DatabaseManager {
 
         return result;
     }
+    
+    /**
+     * Inserts a new user into the database.
+     * 
+     * @param username the username
+     * @param password the password of the user
+     * @param balance the user's balance
+     * @param cardType the user's card type (debit, credit, etc.)
+     * @param cardNum the card number
+     * @param securityCode the security code of the user's card
+     * @param expDate the expiration date of the card
+     * @return boolean value whether transaction was successful
+     */
+    public boolean insertNewUser(String username, String password) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean result = true;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("INSERT_NEW_USER"));
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+
+            stmt.executeUpdate();
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+            result = false; // set return to false
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return result;
+    }    
 
     /**
      * Inserts a new premium user into the database.
@@ -793,5 +842,44 @@ public class DatabaseManager {
         }
 
         return login;
+    }
+    
+    public boolean userExists(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean exist = false;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("CHECK_USER_EXIST"));
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) { // add the game titles to a list of strings
+                exist = true;
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return exist;
     }
 }
