@@ -9,27 +9,27 @@ import java.util.Scanner;
  * @author Alper Mencek
  */
 
-public class main {
+public class ArmorySeedScript {
 
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-        Scanner in = new Scanner(System.in);
-        System.out.println("Enter the total Amount of Users ( note this will be the largest Table) :");
-        
-        int x = in.nextInt();
-    
-        PrintWriter writer = new PrintWriter("ArmorySql.sql", "UTF-8");
-        Random rnd = new Random();
-        int securityCode = 100+rnd.nextInt(899);
-        int dollar = 0 +rnd.nextInt(1000);
-        int cent =00 +rnd.nextInt(99);
-        final String [] card = {"Debit","Credit"};
-        int index=0;
-        int index2=0;
-        int expd = 1 ;
-        int expM = 1 ;
-        int cardNum = 00000000;
-        final String [] Boolean = {"TRUE","FALSE"};
-       //insert into User Table
+	    Scanner in = new Scanner(System.in);
+	    System.out.println("Enter the total Amount of Users ( note this will be the largest Table) :");
+	    
+	    int x = in.nextInt();
+	
+	    PrintWriter writer = new PrintWriter("GeneratedDML.sql", "UTF-8");
+	    Random rnd = new Random();
+	    int securityCode = 100+rnd.nextInt(899);
+	    int dollar = 0 +rnd.nextInt(1000);
+	    int cent =00 +rnd.nextInt(99);
+	    final String [] card = {"Debit","Credit"};
+	    int index=0;
+	    int index2=0;
+	    int expd = 1 ;
+	    int expM = 1 ;
+	    int cardNum = 00000000;
+	    final String [] Boolean = {"TRUE","FALSE"};
+	    //insert into User Table
        for (int i = 0 ; i <x; i++) {
            index = rnd.nextInt(card.length);
            securityCode = 100+rnd.nextInt(899);
@@ -93,7 +93,7 @@ public class main {
            publisherid = 10000 +rnd.nextInt(89999);
            sindex = rnd.nextInt(State.length);
        writer.println("INSERT INTO Publisher VALUES('"+publisherid+"',"
-               + " 'publisher"+i+"', ' City "+i+" ,"+State[sindex]+" ');");
+               + " 'publisher"+i+"', ' City "+i+", "+State[sindex]+" ');");
         publisher[i] +=publisherid; 
        }
        writer.println("\n");
@@ -138,6 +138,7 @@ public class main {
        
        //developer branch
        int[] bidarr = new int[x/3]; 
+       int bidarrIndex = 0;
        int branchid = 0;
        for(int i = 0; i < x/5; i++) {
            didinx = rnd.nextInt(developerid.length);
@@ -145,8 +146,8 @@ public class main {
            branchid =  10000 +rnd.nextInt(99999);
            writer.println("INSERT INTO Developer_branch VALUES('"+developerid[i]+"', '"+branchid+"', "
                    + "'City"+i+ ", "+State[sindex]+"');");
-           bidarr[i] += branchid;
-           
+           bidarr[bidarrIndex] += branchid;
+           bidarrIndex++;
        }
        for(int i = 0; i <(x/3)-(x/5); i++) {
            didinx = rnd.nextInt(developerid.length);
@@ -154,8 +155,8 @@ public class main {
            branchid =  10000 +rnd.nextInt(99999);
            writer.println("INSERT INTO Developer_branch VALUES('"+developerid[didinx]+"', '"+branchid+"', "
                    + "'City"+i+ ", "+State[sindex]+"');");
-           bidarr[i] += branchid;
-           
+           bidarr[bidarrIndex] += branchid;
+           bidarrIndex++;
        }
        writer.println("\n");
        //
@@ -197,41 +198,35 @@ public class main {
         //review
         int rev = 0;
         int rev2= 0;
+        int y = 0;
         
         for(int i = x/5 ; i <((x/5)*2); i++) {
-            int y = 0;
             expM = 1 +rnd.nextInt(12);
             expd = 1 +rnd.nextInt(29);
             rev = 3+rnd.nextInt(6);
             rev2 = rnd.nextInt(9);
             writer.println("INSERT INTO Review VALUES('Review"+y+"', "+rev+"."+rev2+", '"+game[y]+"', 'user"+i+"', '2019-"+expM+"-"+expd+"');");
-        y++;
+            y++;
         }
         
         writer.println("\n");
         
         //uses
-        String [] console = {"Playstation 4", "Xbox one", "Nintendo Switch", "PC"}; 
+        String [] console = {"Playstation 4", "Xbox One", "Nintendo Switch", "PC"}; 
          int cindex =0;
         for(int i = 0; i< x ; i++) {
             cindex =rnd.nextInt(console.length);
             writer.println("INSERT INTO Uses VALUES('user"+i+"', '"+console[cindex]+"');");
         }
         writer.println("\n");
+        
         //available on
         for(int i = 0 ; i <x/3; i++) {
             cindex =rnd.nextInt(console.length);
             writer.println("INSERT INTO Available_on VALUES('"+game[i]+"', '"+console[cindex]+"');");
-        
         }
         
-        for(int i = 0; i < x/5; i++) {
-            cindex =rnd.nextInt(console.length);
-            gindex = rnd.nextInt(game.length);
-            writer.println("INSERT INTO Available_on VALUES('"+game[gindex]+"', '"+console[cindex]+"');");
-        }
        //
        writer.close();
-       }
-
+   }
 }
