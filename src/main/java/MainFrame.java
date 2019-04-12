@@ -74,7 +74,6 @@ public class MainFrame {
 	    LoginDialog login = new LoginDialog(frame, dbMgr);
 	    login.setVisible(true);
 	    username = login.getUsername(); // initializing database manager
-	    // need login
 
 		initialize();
 	}
