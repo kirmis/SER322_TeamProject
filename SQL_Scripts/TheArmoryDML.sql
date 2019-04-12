@@ -116,8 +116,7 @@ INSERT INTO Develops VALUES('00000', '55555');
 
 INSERT INTO Genre VALUES('Role-playing', 'The player controls the actions of a unique character.');
 INSERT INTO Genre VALUES('Fighting', 'Players control a character and engage in close combat with opponents.');
-INSERT INTO Genre VALUES('Shooter', 'The player controls a character and uses weapons, typically guns, to fight enemies
-.');
+INSERT INTO Genre VALUES('Shooter', 'The player controls a character and uses weapons, typically guns, to fight enemies.');
 INSERT INTO Genre VALUES('Action', 'The player must interact in physical challenges such as hand-eye coordination and reaction-time.');
 INSERT INTO Genre VALUES('Adventure', 'The player takes the role of a protagonist in a story that features exploration and puzzle-solving.');
 
