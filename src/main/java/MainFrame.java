@@ -24,7 +24,7 @@ import javax.swing.event.ListSelectionListener;
 /**
  * 
  * 
- * @author Ryan Kirmis
+ * @author Alper Mencek, Manolito Ramirez, and Ryan Kirmis
  * @version 1.0.0
  */
 
@@ -151,10 +151,11 @@ public class MainFrame {
 				String gameName = gamesListModel.getElementAt(index).toString();
 				List<String> gameInfo = dbMgr.getGameInfoByName(gameName);
 				List<String> pubInfo = dbMgr.getPublisherByGame(gameInfo.get(0));
-				currentGamePane.setText(gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
-						+ "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
-						+ gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
-						+ pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2));
+				String gameText = gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
+				+ "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
+				+ gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
+				+ pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
+				currentGamePane.setText(gameText);
 				refreshReviewList();
 			}
 		});
@@ -166,7 +167,7 @@ public class MainFrame {
 		searchPane.setVisible(false);
 		
 		JScrollPane scrollPane3 = new JScrollPane();
-		scrollPane3.setBounds(341, 503, 343, 155);
+		scrollPane3.setBounds(341, 503, 342, 155);
 		contentPane.add(scrollPane3);
 		
 		reviewListModel = new DefaultListModel<String>();
@@ -206,7 +207,7 @@ public class MainFrame {
 		
 		// fill list with review for currently selected game
 		for (int i = 0; i < userReviews.size(); i++) {
-			reviewListModel.addElement(userReviews.get(i).get(0) + ", " + userReviews.get(i).get(1)); 
+			reviewListModel.addElement(userReviews.get(i).get(0) + ", " + userReviews.get(i).get(1) + "/10"); 
 		}
 		
 		reviewList.setModel(reviewListModel);

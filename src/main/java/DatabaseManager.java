@@ -14,7 +14,7 @@ import java.util.Properties;
 /**
  * Manages connections to TheArmory database.
  * 
- * @author Ryan Kirmis, Alper Mencek, and Manolito Ramirez
+ * @author Alper Mencek, Manolito Ramirez, and Ryan Kirmis
  * @version 1.0.0
  */
 
