@@ -70,10 +70,12 @@ public class MainFrame {
 	 * Create the application.
 	 */
 	public MainFrame() {
-		dbMgr = new DatabaseManager(); // initializing database manager
-		
-		username = "rkirmis"; // need login
-		
+        dbMgr = new DatabaseManager();
+	    LoginDialog login = new LoginDialog(frame, dbMgr);
+	    login.setVisible(true);
+	    username = login.getUsername(); // initializing database manager
+	    // need login
+
 		initialize();
 	}
 
