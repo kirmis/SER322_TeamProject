@@ -1044,7 +1044,7 @@ public class DatabaseManager {
      * 
      * @return list containing all game titles
      */
-    public List<String> getAllGameTitles() {
+    public List<String> getAllGameTitles(String username) {
         // declaring connections
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -1055,7 +1055,8 @@ public class DatabaseManager {
             conn = connPool.getConnection(); // get new connection
 
             stmt = conn.prepareStatement((String) queries.get("GET_ALL_GAME_NAMES"));
-
+            stmt.setString(1, username);
+            
             rs = stmt.executeQuery();
 
             while (rs.next()) {

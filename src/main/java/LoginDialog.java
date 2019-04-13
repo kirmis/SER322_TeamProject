@@ -74,7 +74,7 @@ public class LoginDialog extends JDialog {
 
             public void actionPerformed(ActionEvent e) {
                 if (dbmgr.login(getUsernameField(), getPassword())) {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
+                    JOptionPane.showMessageDialog(panel,
                             "Hi " + getUsernameField() + "! You have successfully logged in.",
                             "Login",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -82,7 +82,7 @@ public class LoginDialog extends JDialog {
                     username = getUsernameField();
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
+                    JOptionPane.showMessageDialog(panel,
                             "Invalid username or password",
                             "Login",
                             JOptionPane.ERROR_MESSAGE);
@@ -107,7 +107,7 @@ public class LoginDialog extends JDialog {
             //getting username and passwored after create user button was pressed
             public void actionPerformed(ActionEvent e) {
                 if(getUsernameField().equals("") || getPassword().equals("")) {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
+                    JOptionPane.showMessageDialog(panel,
                             "Please enter a username and password",
                             "Login",
                             JOptionPane.ERROR_MESSAGE);
@@ -115,7 +115,7 @@ public class LoginDialog extends JDialog {
                 }
 
                 else if(dbmgr.userExists(getUsernameField())) {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
+                    JOptionPane.showMessageDialog(panel,
                             "Username is taken, please enter a new username",
                             "Login",
                             JOptionPane.ERROR_MESSAGE);
@@ -124,7 +124,7 @@ public class LoginDialog extends JDialog {
 
                 else{                    
                     dbmgr.insertNewUser(getUsernameField(), getPassword());
-                    JOptionPane.showMessageDialog(LoginDialog.this,
+                    JOptionPane.showMessageDialog(panel,
                             "Successfully created new user " + getUsernameField() + " please log in again",
                             "Login",
                             JOptionPane.INFORMATION_MESSAGE);

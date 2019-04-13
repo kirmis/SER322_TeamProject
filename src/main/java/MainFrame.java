@@ -208,29 +208,37 @@ public class MainFrame {
         JScrollPane scrollPane3 = new JScrollPane();
         scrollPane3.setBounds(341, 503, 342, 155);
         contentPane.add(scrollPane3);
-        
+
         JScrollPane scrollPane6 = new JScrollPane();
         scrollPane6.setBounds(341, 503, 342, 155);
         searchPane.add(scrollPane6);
-        
+
         btnBuy = new JButton("Buy");
         btnBuy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 float balance = dbMgr.userBalance(username);
                 float price = dbMgr.gamePrice(getGame(gamesSearchList, gamesSearchListModel));
                 if(balance > price) {
-                    int selection = JOptionPane.showConfirmDialog(searchPane,
+                    int selection = JOptionPane.showConfirmDialog(frame,
                             "Are you sure you want to buy this game\n resulting price is " + (balance - price) + "?");
                     if(selection == 0) {
                         dbMgr.updateBalance(username, balance-price);
                         dbMgr.addGameToUser(username, dbMgr.getGameID(getGame(gamesSearchList, gamesSearchListModel)));
                     }
                 }
+
+                else {
+                    JOptionPane.showMessageDialog(frame,
+                            "Your funds are not sufficient, please add more funds to your wallet",
+                            "Insufficient Funds",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
         });
         btnBuy.setBounds(566, 116, 122, 29);
         searchPane.add(btnBuy);
-        
+
         reviewListModel = new DefaultListModel<String>();
         reviewList = new JList();
         scrollPane3.setViewportView(reviewList);
@@ -247,7 +255,7 @@ public class MainFrame {
         String gameName = gamesModel.getElementAt(index).toString();
         return gameName;
     }
-    
+
     /**
      * Refresh the list of the user's games.
      */
@@ -268,11 +276,13 @@ public class MainFrame {
      */
     public void refreshGameSearchList() {
         gamesSearchListModel.clear();
-        List<String> games = dbMgr.getAllGameTitles();
+        List<String> games = dbMgr.getAllGameTitles(username);
+        List<String> gamesOwned = dbMgr.getGameTitles(username);
 
         // fill list with user games
         for (int i = 0; i < games.size(); i++) {
-            gamesSearchListModel.addElement(games.get(i)); 
+            if(!gamesOwned.contains(games.get(i)))
+                gamesSearchListModel.addElement(games.get(i)); 
         }
 
         gamesSearchList.setModel(gamesSearchListModel);
