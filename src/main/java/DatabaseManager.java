@@ -93,7 +93,7 @@ public class DatabaseManager {
 
         return result;
     }
-    
+
     /**
      * Inserts a new user into the database.
      * 
@@ -398,7 +398,7 @@ public class DatabaseManager {
             stmt.setString(1, username);
             stmt.setString(2, gameID);
 
-            rs = stmt.executeQuery();
+            stmt.executeUpdate();
         } 
         catch (SQLException e1) {
             System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
@@ -843,7 +843,7 @@ public class DatabaseManager {
 
         return login;
     }
-    
+
     public boolean userExists(String username) {
         // declaring connections
         Connection conn = null;
@@ -881,5 +881,325 @@ public class DatabaseManager {
         }
 
         return exist;
+    }
+
+    public boolean checkReviewUser(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean exist = false;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("CHECK_REVIEW_USER"));
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) { // add the game titles to a list of strings
+                exist = true;
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return exist;
+    }
+
+    public boolean checkBannedUser(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean exist = false;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("CHECK_BANNED_USER"));
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) { // add the game titles to a list of strings
+                exist = true;
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return exist;
+    }
+
+    public boolean checkPremiumUser(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean exist = false;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("CHECK_PREMIUM_USER"));
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) { // add the game titles to a list of strings
+                exist = true;
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return exist;
+    }
+
+    public boolean checkAdmin(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean exist = false;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("CHECK_ADMIN"));
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) { // add the game titles to a list of strings
+                exist = true;
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return exist;
+    }
+
+    /**
+     * Returns all games
+     * 
+     * @return list containing all game titles
+     */
+    public List<String> getAllGameTitles() {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> gameTitle = new ArrayList<String>(); // list for publisher information
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("GET_ALL_GAME_NAMES"));
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                gameTitle.add(rs.getString(1));
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return gameTitle;
+    }
+
+    /**
+     * Grabs the price of a given game
+     * 
+     * @param title the title of desired game
+     * @return Float price of the game
+     */
+    public Float gamePrice(String title) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Float result = new Float(0);
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("GET_PRICE_TITLE"));
+            stmt.setString(1, title);
+
+            rs = stmt.executeQuery();
+            rs.next();
+            result = rs.getFloat(1);
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Grabs the balance of a given user
+     * 
+     * @param username the username of desired user
+     * @return Float balance of the user
+     */
+    public Float userBalance(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Float result = new Float(0);
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("GET_USER_BALANCE"));
+            stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+            rs.next();
+            result = rs.getFloat(1);
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+    public boolean updateBalance(String username, Float balance) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        boolean result = true;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("UPDATE_BALANCE"));
+            stmt.setFloat(1, balance);
+            stmt.setString(2, username);
+
+            stmt.executeUpdate();
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+            result = false; // set return to false
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return result;
     }
 }
