@@ -42,9 +42,11 @@ public class MainFrame {
     private JLabel lblTheArmory;
     private JLabel lblSearchTheArmory;    
     private JLabel lblReviews;
+    private JLabel lblSearchReviews;
     private JLabel lblBalance;
     private JButton btnSearch;
     private JButton btnBuy;
+    private JButton btnBack;
 
     private DefaultListModel<String> gamesListModel;
     private DefaultListModel<String> gamesSearchListModel;
@@ -120,6 +122,7 @@ public class MainFrame {
             }
         });
         btnSearch.setBounds(566, 116, 122, 29);
+        btnSearch.setForeground(new Color(0, 102, 255));
         contentPane.add(btnSearch);
 
         lblUserTitle = new JLabel(username + " - " + rank);
@@ -180,7 +183,23 @@ public class MainFrame {
         lblSearchTheArmory.setBounds(6, 6, 460, 100);
         lblSearchTheArmory.setFont(new Font("Optima", Font.BOLD, 82));
         searchPane.add(lblSearchTheArmory);
+        
+        btnBack = new JButton("Back");
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                searchPane.setVisible(false);
+                contentPane.setVisible(true);
+            }
+        });
+        btnBack.setBounds(16, 116, 122, 29);
+        btnBack.setForeground(new Color(0, 102, 255));
+        searchPane.add(btnBack);
 
+        lblSearchReviews = new JLabel("Reviews:");
+        lblSearchReviews.setForeground(Color.LIGHT_GRAY);
+        lblSearchReviews.setFont(new Font("Lao MN", Font.PLAIN, 30));
+        lblSearchReviews.setBounds(351, 465, 291, 45);
+        searchPane.add(lblSearchReviews);
 
         lblBalance = new JLabel("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
         lblBalance.setForeground(new Color(0, 102, 255));
@@ -263,6 +282,7 @@ public class MainFrame {
             }
         });
         btnBuy.setBounds(566, 116, 122, 29);
+        btnBuy.setForeground(new Color(0, 102, 255));
         searchPane.add(btnBuy);
 
         reviewListModel = new DefaultListModel<String>();
