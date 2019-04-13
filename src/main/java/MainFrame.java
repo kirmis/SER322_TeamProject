@@ -37,6 +37,7 @@ public class MainFrame {
     private JList gamesList;
     private JList gamesSearchList;
     private JList reviewList;
+    private JList reviewSearch;
     private JLabel lblYourGames;
     private JLabel lblUserTitle;
     private JLabel lblTheArmory;
@@ -49,12 +50,14 @@ public class MainFrame {
     private DefaultListModel<String> gamesListModel;
     private DefaultListModel<String> gamesSearchListModel;
     private DefaultListModel<String> reviewListModel;
+    private DefaultListModel<String> reviewSearchModel;
 
     private DatabaseManager dbMgr;
 
     private String username;
     private String rank;
     private JTextPane currentGamePane;
+    private JTextPane currentSearchPane;
 
     /**
      * Launch the application.
@@ -196,8 +199,6 @@ public class MainFrame {
         scrollPane5.setBounds(341, 213, 342, 227);
         searchPane.add(scrollPane5);
 
-        scrollPane5.setViewportView(currentGamePane);
-
         gamesSearchListModel = new DefaultListModel<String>();
         gamesSearchList = new JList();
         scrollPane4.setViewportView(gamesSearchList);
@@ -217,7 +218,7 @@ public class MainFrame {
                     + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
                     + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
                     + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
-                    currentGamePane.setText(gameText);
+                    currentSearchPane.setText(gameText);
                     refreshSearchReviewList();
                 }
                 catch(Exception ex) {}
@@ -231,6 +232,19 @@ public class MainFrame {
         JScrollPane scrollPane6 = new JScrollPane();
         scrollPane6.setBounds(341, 503, 342, 155);
         searchPane.add(scrollPane6);
+               
+        currentSearchPane = new JTextPane();
+        scrollPane5.setViewportView(currentSearchPane);
+        currentSearchPane.setFont(new Font("Lao MN", Font.PLAIN, 16));
+        currentSearchPane.setEditable(false);
+        currentSearchPane.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+        
+        reviewSearchModel = new DefaultListModel<String>();
+        reviewSearch = new JList();
+        scrollPane6.setViewportView(reviewSearch);
+        reviewSearch.setFont(new Font("Lao MN", Font.PLAIN, 12));
+        reviewSearch.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+
 
         btnBuy = new JButton("Buy");
         btnBuy.addActionListener(new ActionListener() {
@@ -268,7 +282,6 @@ public class MainFrame {
         reviewListModel = new DefaultListModel<String>();
         reviewList = new JList();
         scrollPane3.setViewportView(reviewList);
-        scrollPane6.setViewportView(reviewList);
         reviewList.setFont(new Font("Lao MN", Font.PLAIN, 12));
         reviewList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
@@ -337,7 +350,7 @@ public class MainFrame {
      * Refresh the list of the user's reviews.
      */
     public void refreshSearchReviewList() {
-        reviewListModel.clear();
+        reviewSearchModel.clear();
         int index = gamesSearchList.getSelectedIndex();
         String gameName = gamesSearchListModel.getElementAt(index).toString();
         String gameID = dbMgr.getGameID(gameName);
@@ -345,10 +358,10 @@ public class MainFrame {
 
         // fill list with review for currently selected game
         for (int i = 0; i < userReviews.size(); i++) {
-            reviewListModel.addElement(userReviews.get(i).get(0) + ", " + userReviews.get(i).get(1) + "/10"); 
+            reviewSearchModel.addElement(userReviews.get(i).get(0) + ", " + userReviews.get(i).get(1) + "/10"); 
         }
 
-        reviewList.setModel(reviewListModel);
+        reviewSearch.setModel(reviewSearchModel);
     }
 
     public String getRank() {
