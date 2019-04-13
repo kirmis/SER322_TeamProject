@@ -40,7 +40,9 @@ public class MainFrame {
     private JLabel lblYourGames;
     private JLabel lblUserTitle;
     private JLabel lblTheArmory;
+    private JLabel lblSearchTheArmory;    
     private JLabel lblReviews;
+    private JLabel lblBalance;
     private JButton btnSearch;
     private JButton btnBuy;
 
@@ -173,6 +175,19 @@ public class MainFrame {
             }
         });
 
+        lblSearchTheArmory = new JLabel("The Armory");
+        lblSearchTheArmory.setForeground(new Color(0, 102, 255));
+        lblSearchTheArmory.setBounds(6, 6, 460, 100);
+        lblSearchTheArmory.setFont(new Font("Optima", Font.BOLD, 82));
+        searchPane.add(lblSearchTheArmory);
+
+
+        lblBalance = new JLabel("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
+        lblBalance.setForeground(new Color(0, 102, 255));
+        lblBalance.setBounds(500, 6, 200, 80);
+        lblBalance.setFont(new Font("Optima", Font.PLAIN, 24));
+        searchPane.add(lblBalance);
+
         JScrollPane scrollPane4 = new JScrollPane();
         scrollPane4.setBounds(16, 213, 303, 445);
         searchPane.add(scrollPane4);
@@ -192,16 +207,20 @@ public class MainFrame {
         gamesSearchList.addListSelectionListener(new ListSelectionListener () {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                int index = gamesSearchList.getSelectedIndex();
-                String gameName = gamesSearchListModel.getElementAt(index).toString();
-                List<String> gameInfo = dbMgr.getGameInfoByName(gameName);
-                List<String> pubInfo = dbMgr.getPublisherByGame(gameInfo.get(0));
-                String gameText = gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
-                + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
-                + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
-                + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
-                currentGamePane.setText(gameText);
-                refreshSearchReviewList();
+                try{
+                    int index = gamesSearchList.getSelectedIndex();
+
+                    String gameName = gamesSearchListModel.getElementAt(index).toString();
+                    List<String> gameInfo = dbMgr.getGameInfoByName(gameName);
+                    List<String> pubInfo = dbMgr.getPublisherByGame(gameInfo.get(0));
+                    String gameText = gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
+                    + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
+                    + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
+                    + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
+                    currentGamePane.setText(gameText);
+                    refreshSearchReviewList();
+                }
+                catch(Exception ex) {}
             }
         });
 
@@ -216,23 +235,30 @@ public class MainFrame {
         btnBuy = new JButton("Buy");
         btnBuy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                float balance = dbMgr.userBalance(username);
-                float price = dbMgr.gamePrice(getGame(gamesSearchList, gamesSearchListModel));
-                if(balance > price) {
-                    int selection = JOptionPane.showConfirmDialog(frame,
-                            "Are you sure you want to buy this game\n resulting price is " + (balance - price) + "?");
-                    if(selection == 0) {
-                        dbMgr.updateBalance(username, balance-price);
-                        dbMgr.addGameToUser(username, dbMgr.getGameID(getGame(gamesSearchList, gamesSearchListModel)));
+                try {
+                    float balance = dbMgr.userBalance(username);
+                    float price = dbMgr.gamePrice(getGame(gamesSearchList, gamesSearchListModel));
+                    if(balance > price) {
+                        int selection = JOptionPane.showConfirmDialog(frame,
+                                "Are you sure you want to buy this game\n resulting price is " + (balance - price) + "?");
+                        if(selection == 0) {
+                            dbMgr.updateBalance(username, balance-price);
+                            dbMgr.addGameToUser(username, dbMgr.getGameID(getGame(gamesSearchList, gamesSearchListModel)));
+                            lblBalance.setText("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
+                            refreshGameSearchList();
+                        }
+                    }
+
+                    else {
+                        JOptionPane.showMessageDialog(frame,
+                                "Your funds are not sufficient, please add more funds to your wallet",
+                                "Insufficient Funds",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
                 }
+                catch(Exception ex) {
 
-                else {
-                    JOptionPane.showMessageDialog(frame,
-                            "Your funds are not sufficient, please add more funds to your wallet",
-                            "Insufficient Funds",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
                 }
             }
         });
@@ -286,6 +312,7 @@ public class MainFrame {
         }
 
         gamesSearchList.setModel(gamesSearchListModel);
+
     }
 
     /**
