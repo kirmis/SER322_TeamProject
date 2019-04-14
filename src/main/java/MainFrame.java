@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -13,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JList;
 import javax.swing.JPanel;
 
@@ -23,7 +27,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.JOptionPane;
 
 /**
- * 
+ * Main application frame for TheArmory database application.
  * 
  * @author Alper Mencek, Manolito Ramirez, and Ryan Kirmis
  * @version 1.0.0
@@ -34,6 +38,7 @@ public class MainFrame {
     private JFrame frame;
     private JPanel contentPane;
     private JPanel searchPane;
+    private AccountPanel accountPane;
     private JList gamesList;
     private JList gamesSearchList;
     private JList reviewList;
@@ -48,6 +53,7 @@ public class MainFrame {
     private JButton btnSearch;
     private JButton btnBuy;
     private JButton btnBack;
+    private JButton btnAccount;
 
     private DefaultListModel<String> gamesListModel;
     private DefaultListModel<String> gamesSearchListModel;
@@ -104,12 +110,18 @@ public class MainFrame {
         contentPane.setLayout(null);
         contentPane.setBounds(0, 0, 700, 700);
         contentPane.setBackground(Color.DARK_GRAY);
+        
+        // repositioning window to center of screen
+        frame.setLocationRelativeTo(null);
 
         searchPane = new JPanel();
         searchPane.setLayout(null);
         searchPane.setBounds(0, 0, 700, 700);
         searchPane.setBackground(Color.DARK_GRAY);
         searchPane.setVisible(false);
+        
+        accountPane = new AccountPanel(contentPane, dbMgr, username);
+        accountPane.setVisible(false);
 
         lblTheArmory = new JLabel("The Armory");
         lblTheArmory.setForeground(new Color(0, 102, 255));
@@ -180,6 +192,17 @@ public class MainFrame {
                 refreshReviewList();
             }
         });
+        
+        btnAccount = new JButton("Account");
+        btnAccount.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                contentPane.setVisible(false);
+                accountPane.setVisible(true);
+            }
+        });
+        btnAccount.setForeground(new Color(0, 102, 255));
+        btnAccount.setBounds(566, 145, 122, 29);
+        contentPane.add(btnAccount);
 
         lblSearchTheArmory = new JLabel("The Armory");
         lblSearchTheArmory.setForeground(new Color(0, 102, 255));
@@ -307,6 +330,7 @@ public class MainFrame {
 
         frame.getContentPane().add(contentPane);
         frame.getContentPane().add(searchPane);
+        frame.getContentPane().add(accountPane);
     }
 
     public String getGame(JList games, DefaultListModel<String> gamesModel) {

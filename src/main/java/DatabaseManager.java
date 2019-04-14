@@ -1203,4 +1203,49 @@ public class DatabaseManager {
 
         return result;
     }
+    
+    /**
+     * Returns all user platforms.
+     * 
+     * @param username the username
+     * @return list containing all user platforms
+     */
+    public List<String> getUserPlatforms(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> platforms = new ArrayList<String>(); // list for publisher information
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("GET_USER_PLATFORMS"));
+            stmt.setString(1, username);
+            
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                platforms.add(rs.getString(1));
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return platforms;
+    }
 }
