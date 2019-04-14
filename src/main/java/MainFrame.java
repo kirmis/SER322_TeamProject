@@ -134,6 +134,8 @@ public class MainFrame {
             public void actionPerformed(ActionEvent e) {
                 searchPane.setVisible(true);
                 contentPane.setVisible(false);
+                
+                refreshGameSearchList(); // refreshing game search list
             }
         });
         btnSearch.setBounds(566, 116, 122, 29);
@@ -296,7 +298,7 @@ public class MainFrame {
                     float price = dbMgr.gamePrice(getGame(gamesSearchList, gamesSearchListModel));
                     if(balance > price) {
                         int selection = JOptionPane.showConfirmDialog(frame,
-                                "Are you sure you want to buy this game\n resulting price is " + (balance - price) + "?");
+                                "Are you sure you want to buy this game?\n Resulting balance is " + (balance - price));
                         if(selection == 0) {
                             dbMgr.updateBalance(username, balance-price);
                             dbMgr.addGameToUser(username, dbMgr.getGameID(getGame(gamesSearchList, gamesSearchListModel)));
@@ -362,7 +364,7 @@ public class MainFrame {
         List<String> games = dbMgr.getAllGameTitles(username);
         List<String> gamesOwned = dbMgr.getGameTitles(username);
 
-        // fill list with user games
+        // fill list with games user does not own
         for (int i = 0; i < games.size(); i++) {
             if(!gamesOwned.contains(games.get(i)))
                 gamesSearchListModel.addElement(games.get(i)); 
@@ -408,6 +410,11 @@ public class MainFrame {
         reviewSearch.setModel(reviewSearchModel);
     }
 
+    /**
+     * Gets the rank of the user.
+     * 
+     * @return rank of the user
+     */
     public String getRank() {
         if(dbMgr.checkAdmin(username))
             return "Admin";

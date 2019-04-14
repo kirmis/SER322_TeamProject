@@ -51,61 +51,6 @@ public class DatabaseManager {
      * @param expDate the expiration date of the card
      * @return boolean value whether transaction was successful
      */
-    public boolean insertUser(String username, String password, double balance, 
-            String cardType, String cardNum, String securityCode, Date expDate) {
-        // declaring connections
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        boolean result = true;
-
-        try {
-            conn = connPool.getConnection(); // get new connection
-
-            stmt = conn.prepareStatement((String) queries.get("INSERT_USER"));
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setDouble(3, balance);
-            stmt.setString(4, cardType);
-            stmt.setString(5, cardNum);
-            stmt.setString(6, securityCode);
-            stmt.setDate(7, expDate);
-
-            rs = stmt.executeQuery();
-        } 
-        catch (SQLException e1) {
-            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
-            e1.printStackTrace();
-            result = false; // set return to false
-        } 
-        finally {
-            try {
-                // closing connections
-                if (conn != null) conn.close();
-                if (stmt != null) stmt.close();
-                if (rs != null) rs.close();
-            } 
-            catch (SQLException e1) {
-                System.out.println("ERROR: Connection to database could not be closed");
-                e1.printStackTrace();
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Inserts a new user into the database.
-     * 
-     * @param username the username
-     * @param password the password of the user
-     * @param balance the user's balance
-     * @param cardType the user's card type (debit, credit, etc.)
-     * @param cardNum the card number
-     * @param securityCode the security code of the user's card
-     * @param expDate the expiration date of the card
-     * @return boolean value whether transaction was successful
-     */
     public boolean insertNewUser(String username, String password) {
         // declaring connections
         Connection conn = null;
@@ -169,7 +114,7 @@ public class DatabaseManager {
             stmt.setBoolean(3, playOnline);
             stmt.setDate(4, renewalDate);
 
-            rs = stmt.executeQuery();
+            stmt.executeUpdate();
         } 
         catch (SQLException e1) {
             System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
@@ -213,7 +158,7 @@ public class DatabaseManager {
             stmt.setString(1, username);
             stmt.setBoolean(2, earlyAccess);
 
-            rs = stmt.executeQuery();
+            stmt.executeUpdate();
         } 
         catch (SQLException e1) {
             System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
@@ -259,7 +204,7 @@ public class DatabaseManager {
             stmt.setBoolean(2, bannedBranding);
             stmt.setString(3, bannedDesription);
 
-            rs = stmt.executeQuery();
+            stmt.executeUpdate();
         } 
         catch (SQLException e1) {
             System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
@@ -301,7 +246,7 @@ public class DatabaseManager {
             stmt = conn.prepareStatement((String) queries.get("INSERT_SYSTEM_ADMIN"));
             stmt.setString(1, username);
 
-            rs = stmt.executeQuery();
+            stmt.executeUpdate();
         } 
         catch (SQLException e1) {
             System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
@@ -354,7 +299,7 @@ public class DatabaseManager {
             stmt.setDouble(5, price);
             stmt.setString(6, publisherID);
 
-            rs = stmt.executeQuery();
+            stmt.executeUpdate();
         } 
         catch (SQLException e1) {
             System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
@@ -449,7 +394,7 @@ public class DatabaseManager {
             stmt.setString(4, reviewerUsername);
             stmt.setDate(5, datePosted);
 
-            rs = stmt.executeQuery();
+            stmt.executeUpdate();
         } 
         catch (SQLException e1) {
             System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
@@ -493,7 +438,7 @@ public class DatabaseManager {
             stmt.setString(1, username);
             stmt.setString(2, platformType);
 
-            rs = stmt.executeQuery();
+            stmt.executeUpdate();
         } 
         catch (SQLException e1) {
             System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
@@ -1012,6 +957,52 @@ public class DatabaseManager {
 
             stmt = conn.prepareStatement((String) queries.get("CHECK_ADMIN"));
             stmt.setString(1, username);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) { // add the game titles to a list of strings
+                exist = true;
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return exist;
+    }
+    
+    /**
+     * Checks to see if the user already has the platform.
+     * 
+     * @param username the username 
+     * @return true/false
+     */
+    public boolean checkUserPlatform(String username, String platform) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean exist = false;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("CHECK_USER_PLATFORMS"));
+            stmt.setString(1, username);
+            stmt.setString(2, platform);
 
             rs = stmt.executeQuery();
 
