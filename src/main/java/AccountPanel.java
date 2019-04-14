@@ -54,6 +54,7 @@ public class AccountPanel extends JPanel {
     private JButton btnUpgradeAccount;
     private JButton btnUpdateCardInformation;
     private JButton btnAddPlatform;
+    private JButton btnAddFunds;
     private JList platformList;
     private DefaultListModel<String> platformModel;
     
@@ -385,9 +386,85 @@ public class AccountPanel extends JPanel {
         });
         add(btnAddPlatform);
         
-        JButton btnAddFunds = new JButton("Add funds");
+        btnAddFunds = new JButton("Add funds");
         btnAddFunds.setForeground(new Color(0, 102, 255));
         btnAddFunds.setBounds(534, 116, 139, 29);
+        btnAddPlatform.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JDialog fundsDlg = new JDialog();
+                
+                JPanel fundsPanel = new JPanel(new GridBagLayout());
+                fundsPanel.setBounds(0, 0, 300, 300);
+                fundsPanel.setBackground(Color.DARK_GRAY);
+                GridBagConstraints cs = new GridBagConstraints();
+
+                JLabel lblChoosePlatform = new JLabel("Add funds:");
+                lblChoosePlatform.setFont(new Font("Optima", Font.PLAIN, 16));
+                lblChoosePlatform.setForeground(new Color(0, 102, 255));
+                cs.gridx = 0;
+                cs.gridy = 0;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                fundsPanel.add(lblChoosePlatform, cs);
+
+                JScrollPane scrollPane = new JScrollPane();
+                String [] platforms = {"Xbox One", "Playstation 4", "Nintendo Switch", "PC"};
+                DefaultListModel<String> platformListModel = new DefaultListModel<String>();
+                for(int i = 0; i < platforms.length; i++)
+                    platformListModel.addElement(platforms[i]);
+                JList platformList = new JList(platformListModel);
+                platformList.setPreferredSize(new Dimension(200, 100));
+                scrollPane.setViewportView(platformList);
+                
+                cs = new GridBagConstraints();
+                cs.gridx = 0;
+                cs.gridy = 1;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                fundsPanel.add(scrollPane, cs);
+                
+                JButton btnAdd = new JButton("Add");
+                btnAdd.setForeground(new Color(0, 102, 255));
+                btnAdd.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        int index = platformList.getSelectedIndex();
+                        String platform = platformListModel.getElementAt(index).toString();
+                        
+                        if(dbMgr.checkUserPlatform(username, platform) == true) {
+                            JOptionPane.showMessageDialog(parentPanel,
+                                    "You already own this platform.",
+                                    "Platform not added",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        } else {
+                            dbMgr.addPlatformToUser(username, platform);
+                            fundsDlg.dispose();
+                            JOptionPane.showMessageDialog(parentPanel,
+                                    "Platform added successfully.",
+                                    "Platform added",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            refreshPlatformList();
+                        }
+                    }
+                });
+                
+                cs = new GridBagConstraints();
+                cs.gridx = 0;
+                cs.gridy = 2;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                fundsPanel.add(btnAdd, cs);
+                
+                fundsDlg.setBounds(0, 0, 300, 300);
+                fundsDlg.setLocationRelativeTo(parentPanel);
+                
+                fundsDlg.getContentPane().add(fundsPanel);
+                fundsDlg.setVisible(true);
+            }
+        });
         add(btnAddFunds);
         
         refreshCardInfo();
