@@ -9,6 +9,9 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -17,6 +20,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -33,6 +37,7 @@ import javax.swing.JDialog;
 public class AccountPanel extends JPanel {
     private DatabaseManager dbMgr;
     private String username;
+    private String rank;
     private JPanel parentPanel;
     private JLabel lblTheArmory;
     private JLabel lblCardInformation;
@@ -44,6 +49,7 @@ public class AccountPanel extends JPanel {
     private JLabel lblExpirationDate;
     private JLabel lblAccountType;
     private JLabel lblUsername;
+    private JLabel lblBalance;
     private JButton btnBack;
     private JButton btnUpgradeAccount;
     private JButton btnUpdateCardInformation;
@@ -58,9 +64,10 @@ public class AccountPanel extends JPanel {
      * @param dbMgr the database manager
      * @param username the current user's username
      */
-    public AccountPanel(JPanel parentPanel, DatabaseManager dbMgr, String username) {
+    public AccountPanel(JPanel parentPanel, DatabaseManager dbMgr, String username, String rank) {
         this.parentPanel = parentPanel;
         this.username = username;
+        this.rank = rank;
         this.dbMgr = dbMgr;
         initialize();
     }
@@ -89,6 +96,12 @@ public class AccountPanel extends JPanel {
         btnBack.setBounds(16, 116, 122, 29);
         btnBack.setForeground(new Color(0, 102, 255));
         this.add(btnBack);
+        
+        lblBalance = new JLabel("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
+        lblBalance.setForeground(new Color(0, 102, 255));
+        lblBalance.setBounds(500, 6, 200, 80);
+        lblBalance.setFont(new Font("Optima", Font.PLAIN, 24));
+        this.add(lblBalance);
         
         lblCardInformation = new JLabel("Card information");
         lblCardInformation.setForeground(Color.LIGHT_GRAY);
@@ -120,43 +133,38 @@ public class AccountPanel extends JPanel {
         lblCardType = new JLabel("Card type: ");
         lblCardType.setForeground(Color.LIGHT_GRAY);
         lblCardType.setFont(new Font("Optima", Font.PLAIN, 16));
-        lblCardType.setBounds(37, 345, 98, 23);
+        lblCardType.setBounds(37, 345, 514, 23);
         add(lblCardType);
         
         lblCardNumber = new JLabel("Card number: ");
         lblCardNumber.setForeground(Color.LIGHT_GRAY);
         lblCardNumber.setFont(new Font("Optima", Font.PLAIN, 16));
-        lblCardNumber.setBounds(37, 372, 98, 23);
+        lblCardNumber.setBounds(37, 372, 514, 23);
         add(lblCardNumber);
         
         lblSecurityCode = new JLabel("Security code: ");
         lblSecurityCode.setForeground(Color.LIGHT_GRAY);
         lblSecurityCode.setFont(new Font("Optima", Font.PLAIN, 16));
-        lblSecurityCode.setBounds(37, 399, 114, 23);
+        lblSecurityCode.setBounds(37, 399, 514, 23);
         add(lblSecurityCode);
         
         lblExpirationDate = new JLabel("Expiration date: ");
         lblExpirationDate.setForeground(Color.LIGHT_GRAY);
         lblExpirationDate.setFont(new Font("Optima", Font.PLAIN, 16));
-        lblExpirationDate.setBounds(37, 426, 114, 23);
+        lblExpirationDate.setBounds(37, 426, 514, 23);
         add(lblExpirationDate);
         
-        lblAccountType = new JLabel("Account type: ");
+        lblAccountType = new JLabel("Account type: " + rank);
         lblAccountType.setForeground(Color.LIGHT_GRAY);
         lblAccountType.setFont(new Font("Optima", Font.PLAIN, 16));
-        lblAccountType.setBounds(37, 220, 119, 23);
+        lblAccountType.setBounds(37, 220, 514, 23);
         add(lblAccountType);
         
-        lblUsername = new JLabel("Username:");
+        lblUsername = new JLabel("Username: " + username);
         lblUsername.setForeground(Color.LIGHT_GRAY);
         lblUsername.setFont(new Font("Optima", Font.PLAIN, 16));
-        lblUsername.setBounds(37, 246, 119, 23);
+        lblUsername.setBounds(37, 246, 514, 23);
         add(lblUsername);
-        
-        btnUpgradeAccount = new JButton("Upgrade account");
-        btnUpgradeAccount.setBounds(534, 184, 139, 29);
-        btnUpgradeAccount.setForeground(new Color(0, 102, 255));
-        add(btnUpgradeAccount);
         
         btnUpdateCardInformation = new JButton("Update card information");
         btnUpdateCardInformation.setBounds(492, 309, 181, 29);
@@ -187,6 +195,7 @@ public class AccountPanel extends JPanel {
                 cardSpinner.setMinimumSize(new Dimension(80, 0));
                 
                 cs = new GridBagConstraints();
+                cs.fill = GridBagConstraints.HORIZONTAL;
                 cs.gridx = 1;
                 cs.gridy = 0;
                 cs.insets = new Insets(5, 10, 5, 10);
@@ -206,18 +215,18 @@ public class AccountPanel extends JPanel {
                 cardPanel.add(lblCardNum, cs);
                 
                 JTextField tfCardNum = new JTextField();
-                tfCardNum.setMinimumSize(new Dimension(80, 0));
                 cs = new GridBagConstraints();
+                cs.fill = GridBagConstraints.HORIZONTAL;
                 cs.gridx = 1;
                 cs.gridy = 1;
                 cs.insets = new Insets(5, 10, 5, 10);
-                cs.gridwidth = 1;
+                cs.gridwidth = 2;
                 cs.anchor = GridBagConstraints.CENTER;
                 cardPanel.add(tfCardNum, cs);
                 
                 JLabel lblSecurityCode = new JLabel("Security code:");
-                lblCardNum.setFont(new Font("Optima", Font.PLAIN, 16));
-                lblCardNum.setForeground(new Color(0, 102, 255));
+                lblSecurityCode.setFont(new Font("Optima", Font.PLAIN, 16));
+                lblSecurityCode.setForeground(new Color(0, 102, 255));
                 cs = new GridBagConstraints();
                 cs.gridx = 0;
                 cs.gridy = 2;
@@ -227,8 +236,8 @@ public class AccountPanel extends JPanel {
                 cardPanel.add(lblSecurityCode, cs);
                 
                 JTextField tfSecurityCode = new JTextField();
-                tfSecurityCode.setMinimumSize(new Dimension(80, 0));
                 cs = new GridBagConstraints();
+                cs.fill = GridBagConstraints.HORIZONTAL;
                 cs.gridx = 1;
                 cs.gridy = 2;
                 cs.insets = new Insets(5, 10, 5, 10);
@@ -236,17 +245,51 @@ public class AccountPanel extends JPanel {
                 cs.anchor = GridBagConstraints.CENTER;
                 cardPanel.add(tfSecurityCode, cs);
                 
+                JLabel lblExpDate = new JLabel("Expiration date:");
+                lblExpDate.setFont(new Font("Optima", Font.PLAIN, 16));
+                lblExpDate.setForeground(new Color(0, 102, 255));
+                cs = new GridBagConstraints();
+                cs.gridx = 0;
+                cs.gridy = 3;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                cardPanel.add(lblExpDate, cs);
+                
+                JSpinner expDate = new JSpinner(new SpinnerDateModel());
+                SimpleDateFormat sdf = new SimpleDateFormat();
+                sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT);
+                expDate.setEditor(new JSpinner.DateEditor(expDate, sdf.toPattern()));
+                cs = new GridBagConstraints();
+                cs.fill = GridBagConstraints.HORIZONTAL;
+                cs.gridx = 1;
+                cs.gridy = 3;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                cardPanel.add(expDate, cs);
+                
                 JButton btnUpdate = new JButton("Update");
                 btnUpdate.setForeground(new Color(0, 102, 255));
                 btnUpdate.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        
+                        String cardType = (String)cardSpinner.getValue();
+                        String cardNum = tfCardNum.getText();
+                        String securityCode = tfSecurityCode.getText();
+                        java.sql.Date expirationDate = new java.sql.Date(((java.util.Date)expDate.getValue()).getTime());
+                        dbMgr.updateCardInformation(username, cardType, cardNum, securityCode, expirationDate);
+                        JOptionPane.showMessageDialog(parentPanel,
+                                "Card information updated successfully.",
+                                "Card information updated",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        cardDlg.dispose();
+                        refreshCardInfo();
                     }
                 });
                 
                 cs = new GridBagConstraints();
                 cs.gridx = 1;
-                cs.gridy = 3;
+                cs.gridy = 4;
                 cs.insets = new Insets(5, 10, 5, 10);
                 cs.gridwidth = 1;
                 cs.anchor = GridBagConstraints.CENTER;
@@ -255,7 +298,7 @@ public class AccountPanel extends JPanel {
                 cardDlg.setBounds(0, 0, 300, 300);
                 cardDlg.setLocationRelativeTo(parentPanel);
                 
-                cardDlg.add(cardPanel);
+                cardDlg.getContentPane().add(cardPanel);
                 cardDlg.setVisible(true);
             }
         });
@@ -336,15 +379,38 @@ public class AccountPanel extends JPanel {
                 platformDlg.setBounds(0, 0, 300, 300);
                 platformDlg.setLocationRelativeTo(parentPanel);
                 
-                platformDlg.add(platformPanel);
+                platformDlg.getContentPane().add(platformPanel);
                 platformDlg.setVisible(true);
             }
         });
         add(btnAddPlatform);
+        
+        JButton btnAddFunds = new JButton("Add funds");
+        btnAddFunds.setForeground(new Color(0, 102, 255));
+        btnAddFunds.setBounds(534, 116, 139, 29);
+        add(btnAddFunds);
+        
+        refreshCardInfo();
     }
     
     /**
-     * Refresh the list of the user's platforms.
+     * Refreshes the user's card information.
+     */
+    public void refreshCardInfo() {
+        List<String> userInfo = dbMgr.getUserInfo(username);
+        
+        if(userInfo.get(3) != null)
+            lblCardType.setText("Card type: " + userInfo.get(3));
+        if(userInfo.get(4) != null)
+            lblCardNumber.setText("Card number: " + userInfo.get(4));
+        if(userInfo.get(5) != null)
+            lblSecurityCode.setText("Security code: " + userInfo.get(5));
+        if(userInfo.get(6) != null)
+            lblExpirationDate.setText("Expiration date: " + userInfo.get(6));
+    }
+    
+    /**
+     * Refreshes the list of the user's platforms.
      */
     public void refreshPlatformList() {
         platformModel.clear();

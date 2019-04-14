@@ -120,7 +120,7 @@ public class MainFrame {
         searchPane.setBackground(Color.DARK_GRAY);
         searchPane.setVisible(false);
         
-        accountPane = new AccountPanel(contentPane, dbMgr, username);
+        accountPane = new AccountPanel(contentPane, dbMgr, username, rank);
         accountPane.setVisible(false);
 
         lblTheArmory = new JLabel("The Armory");

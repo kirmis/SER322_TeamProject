@@ -1196,6 +1196,54 @@ public class DatabaseManager {
     }
     
     /**
+     * Updates a user's card information.
+     * 
+     * @param username the username
+     * @param cardType the card type
+     * @param cardNum the card number
+     * @param securityCode the security code
+     * @param expDate the expiration date
+     * @return result of the transaction
+     */
+    public boolean updateCardInformation(String username, String cardType, String cardNum, String securityCode, Date expDate) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        boolean result = true;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("UPDATE_CARD_INFO"));
+            stmt.setString(1, cardType);
+            stmt.setString(2, cardNum);
+            stmt.setString(3, securityCode);
+            stmt.setDate(4, expDate);
+            stmt.setString(5, username);
+
+            stmt.executeUpdate();
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+            result = false; // set return to false
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+    
+    /**
      * Returns all user platforms.
      * 
      * @param username the username
@@ -1238,5 +1286,56 @@ public class DatabaseManager {
         }
 
         return platforms;
+    }
+    
+    /**
+     * Returns all information for a user.
+     * 
+     * @param username the username
+     * @return list containing all user info
+     */
+    public List<String> getUserInfo(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> userInfo = new ArrayList<String>(); // list for publisher information
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("GET_USER_INFO"));
+            stmt.setString(1, username);
+            
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                userInfo.add(rs.getString(1));
+                userInfo.add(rs.getString(2));
+                userInfo.add(rs.getString(3));
+                userInfo.add(rs.getString(4));
+                userInfo.add(rs.getString(5));
+                userInfo.add(rs.getString(6));
+                userInfo.add(rs.getString(7));
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return userInfo;
     }
 }
