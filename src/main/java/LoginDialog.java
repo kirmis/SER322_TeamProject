@@ -19,6 +19,12 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.border.LineBorder;
 
+/**
+ * Login dialog window for signing in to TheArmory application.
+ * 
+ * @author Alper Mencek, Manolito Ramirez, and Ryan Kirmis
+ * @version 1.0.0
+ */
 
 public class LoginDialog extends JDialog {
 

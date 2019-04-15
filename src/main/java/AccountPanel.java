@@ -34,6 +34,7 @@ import javax.swing.JDialog;
  * @author Alper Mencek, Manolito Ramirez, and Ryan Kirmis
  * @version 1.0.0
  */
+
 public class AccountPanel extends JPanel {
     private DatabaseManager dbMgr;
     private String username;

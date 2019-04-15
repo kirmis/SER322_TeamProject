@@ -7,11 +7,21 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Stack;
 
+/**
+ * Connection pool for saving and holding connections in a pool.
+ * 
+ * @author Alper Mencek, Manolito Ramirez, and Ryan Kirmis
+ * @version 1.0.0
+ */
+
 public class ConnectionPool {
 	private static ConnectionPool singleInstance;
 	private Stack<Connection> conns;
 	private Properties config;
 	
+	/**
+	 * Setting up connection pool.
+	 */
 	private ConnectionPool() {
 		try {
 			// loading configuration properties file
@@ -38,6 +48,11 @@ public class ConnectionPool {
 		}
 	}
 	
+	/**
+	 * Getting singleton of connection pool.
+	 * 
+	 * @return the singleton
+	 */
 	public static ConnectionPool getInstance() {
 		if (singleInstance == null)
 			return new ConnectionPool();
@@ -45,6 +60,12 @@ public class ConnectionPool {
 		return singleInstance;
 	}
 	
+	/**
+	 * Returns either a new connection or an unused connection in the pool.
+	 * 
+	 * @return the connection
+	 * @throws SQLException if connection fails
+	 */
 	public Connection getConnection() throws SQLException {
 		Connection conn = null;
 		
@@ -59,6 +80,11 @@ public class ConnectionPool {
 		return conn;
 	}
 	
+	/**
+	 * Adds a connection back to the pool.
+	 * 
+	 * @param conn the connection being added
+	 */
 	public void releaseConnection(Connection conn) {
 		conns.push(conn);
 	}
