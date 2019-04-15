@@ -172,6 +172,8 @@ public class AccountPanel extends JPanel {
         btnUpdateCardInformation.setForeground(new Color(0, 102, 255));
         btnUpdateCardInformation.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // Listener that allows the user to update card information
+                
                 JDialog cardDlg = new JDialog();
                 
                 JPanel cardPanel = new JPanel(new GridBagLayout());
@@ -310,6 +312,8 @@ public class AccountPanel extends JPanel {
         btnAddPlatform.setForeground(new Color(0, 102, 255));
         btnAddPlatform.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // Listener that allows the user to add new game platforms
+                
                 JDialog platformDlg = new JDialog();
                 
                 JPanel platformPanel = new JPanel(new GridBagLayout());
@@ -391,6 +395,8 @@ public class AccountPanel extends JPanel {
         btnAddFunds.setBounds(534, 116, 139, 29);
         btnAddFunds.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // Listener that allows the user to add funds to their account
+                
                 JDialog fundsDlg = new JDialog();
                 
                 JPanel fundsPanel = new JPanel(new GridBagLayout());

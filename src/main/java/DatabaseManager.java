@@ -798,6 +798,13 @@ public class DatabaseManager {
         return revInfo;
     }
 
+    /**
+     * Checks the validitiy of the entered username and password.
+     * 
+     * @param username the username
+     * @param password the user's password
+     * @return result of the transaction
+     */
     public boolean login(String username, String password) {
         // declaring connections
         Connection conn = null;
@@ -838,6 +845,12 @@ public class DatabaseManager {
         return login;
     }
 
+    /**
+     * Checks if the user exists in the database.
+     * 
+     * @param username the username
+     * @return the result of the transaction
+     */
     public boolean userExists(String username) {
         // declaring connections
         Connection conn = null;
@@ -853,7 +866,7 @@ public class DatabaseManager {
 
             rs = stmt.executeQuery();
 
-            while (rs.next()) { // add the game titles to a list of strings
+            while (rs.next()) { 
                 exist = true;
             }
         } 
@@ -877,6 +890,12 @@ public class DatabaseManager {
         return exist;
     }
 
+    /**
+     * Checks if the user is a review user.
+     * 
+     * @param username the username
+     * @return the result of the transaction
+     */
     public boolean checkReviewUser(String username) {
         // declaring connections
         Connection conn = null;
@@ -892,7 +911,7 @@ public class DatabaseManager {
 
             rs = stmt.executeQuery();
 
-            while (rs.next()) { // add the game titles to a list of strings
+            while (rs.next()) { 
                 exist = true;
             }
         } 
@@ -916,6 +935,12 @@ public class DatabaseManager {
         return exist;
     }
 
+    /**
+     * Checks if the user is a banned user.
+     * 
+     * @param username the username
+     * @return the result of the transaction
+     */
     public boolean checkBannedUser(String username) {
         // declaring connections
         Connection conn = null;
@@ -931,7 +956,7 @@ public class DatabaseManager {
 
             rs = stmt.executeQuery();
 
-            while (rs.next()) { // add the game titles to a list of strings
+            while (rs.next()) { 
                 exist = true;
             }
         } 
@@ -955,6 +980,12 @@ public class DatabaseManager {
         return exist;
     }
 
+    /**
+     * Checks if the user is a premium user.
+     * 
+     * @param username the username
+     * @return the result of the transaction
+     */
     public boolean checkPremiumUser(String username) {
         // declaring connections
         Connection conn = null;
@@ -970,7 +1001,7 @@ public class DatabaseManager {
 
             rs = stmt.executeQuery();
 
-            while (rs.next()) { // add the game titles to a list of strings
+            while (rs.next()) { 
                 exist = true;
             }
         } 
@@ -994,6 +1025,12 @@ public class DatabaseManager {
         return exist;
     }
 
+    /**
+     * Checks if the user is a system administrator.
+     * 
+     * @param username the username
+     * @return the result of the transaction
+     */
     public boolean checkAdmin(String username) {
         // declaring connections
         Connection conn = null;
@@ -1009,7 +1046,7 @@ public class DatabaseManager {
 
             rs = stmt.executeQuery();
 
-            while (rs.next()) { // add the game titles to a list of strings
+            while (rs.next()) { 
                 exist = true;
             }
         } 
@@ -1055,7 +1092,7 @@ public class DatabaseManager {
 
             rs = stmt.executeQuery();
 
-            while (rs.next()) { // add the game titles to a list of strings
+            while (rs.next()) { 
                 exist = true;
             }
         } 
@@ -1080,8 +1117,9 @@ public class DatabaseManager {
     }
 
     /**
-     * Returns all games
+     * Returns all games that a user has the platform to play on.
      * 
+     * @param username the username
      * @return list containing all game titles
      */
     public List<String> getAllGameTitles(String username) {
@@ -1089,7 +1127,7 @@ public class DatabaseManager {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<String> gameTitle = new ArrayList<String>(); // list for publisher information
+        List<String> gameTitle = new ArrayList<String>(); 
 
         try {
             conn = connPool.getConnection(); // get new connection
@@ -1124,7 +1162,7 @@ public class DatabaseManager {
     }
 
     /**
-     * Grabs the price of a given game
+     * Grabs the price of a given game.
      * 
      * @param title the title of desired game
      * @return Float price of the game
@@ -1167,7 +1205,7 @@ public class DatabaseManager {
     }
 
     /**
-     * Grabs the balance of a given user
+     * Grabs the balance of a given user.
      * 
      * @param username the username of desired user
      * @return Float balance of the user
@@ -1209,6 +1247,13 @@ public class DatabaseManager {
         return result;
     }
 
+    /**
+     * Updates a user's balance.
+     * 
+     * @param username the username
+     * @param balance the user's balance
+     * @return result of the transaction
+     */
     public boolean updateBalance(String username, Float balance) {
         // declaring connections
         Connection conn = null;

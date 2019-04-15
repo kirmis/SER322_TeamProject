@@ -35,7 +35,6 @@ public class LoginDialog extends JDialog {
 
     public LoginDialog(Frame parent, DatabaseManager dbmgr) {
         super(parent, "Login", true);
-        System.out.println("debug");
         username = null;
         this.parent = parent;
         JPanel panel = new JPanel(new GridBagLayout());

@@ -106,6 +106,7 @@ public class MainFrame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
 
+        // creating main content pane
         contentPane = new JPanel();
         contentPane.setLayout(null);
         contentPane.setBounds(0, 0, 700, 700);
@@ -114,12 +115,14 @@ public class MainFrame {
         // repositioning window to center of screen
         frame.setLocationRelativeTo(null);
 
+        // creating pane for searching and purchasing games
         searchPane = new JPanel();
         searchPane.setLayout(null);
         searchPane.setBounds(0, 0, 700, 700);
         searchPane.setBackground(Color.DARK_GRAY);
         searchPane.setVisible(false);
         
+        // initializing pane for chaning account information
         accountPane = new AccountPanel(contentPane, dbMgr, username, rank);
         accountPane.setVisible(false);
 
@@ -129,6 +132,7 @@ public class MainFrame {
         lblTheArmory.setFont(new Font("Optima", Font.BOLD, 82));
         contentPane.add(lblTheArmory);
 
+        // adding action listener for button to change to search panel
         btnSearch = new JButton("Search Games");
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -142,6 +146,7 @@ public class MainFrame {
         btnSearch.setForeground(new Color(0, 102, 255));
         contentPane.add(btnSearch);
 
+        // creating label for user and rank
         lblUserTitle = new JLabel(username + " - " + rank);
         lblUserTitle.setForeground(Color.LIGHT_GRAY);
         lblUserTitle.setFont(new Font("Lao MN", Font.PLAIN, 16));
@@ -300,12 +305,13 @@ public class MainFrame {
                     float price = dbMgr.gamePrice(getGame(gamesSearchList, gamesSearchListModel));
                     if(balance > price) {
                         int selection = JOptionPane.showConfirmDialog(frame,
-                                "Are you sure you want to buy this game?\n Resulting balance is " + (balance - price));
+                                "Are you sure you want to buy this game?\n Resulting balance is $" + String.format("%.2f", (balance - price)));
                         if(selection == 0) {
                             dbMgr.updateBalance(username, balance-price);
                             dbMgr.addGameToUser(username, dbMgr.getGameID(getGame(gamesSearchList, gamesSearchListModel)));
                             lblBalance.setText("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
                             refreshGameSearchList();
+                            refreshGameList();
                         }
                     }
 
@@ -337,6 +343,13 @@ public class MainFrame {
         frame.getContentPane().add(accountPane);
     }
 
+    /**
+     * Returns the game title of the currently selected game in a JList.
+     * 
+     * @param games the JList of games
+     * @param gamesModel the model
+     * @return the title of the game
+     */
     public String getGame(JList games, DefaultListModel<String> gamesModel) {
         int index = games.getSelectedIndex();
         String gameName = gamesModel.getElementAt(index).toString();
