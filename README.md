@@ -1,5 +1,4 @@
-# SER322 Team Project
-## SER322 Semester Project - Spring 2019
+# SER322 Team Project - Spring 2019
 
 ### Team: Alper Mencek, Manolito Ramirez, and Ryan Kirmis
 
