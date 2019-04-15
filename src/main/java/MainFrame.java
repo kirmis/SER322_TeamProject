@@ -190,6 +190,7 @@ public class MainFrame {
                 + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
                 + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
                 + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
+                
                 currentGamePane.setText(gameText);
                 refreshReviewList();
             }
@@ -262,6 +263,7 @@ public class MainFrame {
                     + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
                     + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
                     + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
+                    
                     currentSearchPane.setText(gameText);
                     refreshSearchReviewList();
                 }

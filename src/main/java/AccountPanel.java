@@ -389,7 +389,7 @@ public class AccountPanel extends JPanel {
         btnAddFunds = new JButton("Add funds");
         btnAddFunds.setForeground(new Color(0, 102, 255));
         btnAddFunds.setBounds(534, 116, 139, 29);
-        btnAddPlatform.addActionListener(new ActionListener() {
+        btnAddFunds.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JDialog fundsDlg = new JDialog();
                 
@@ -398,8 +398,8 @@ public class AccountPanel extends JPanel {
                 fundsPanel.setBackground(Color.DARK_GRAY);
                 GridBagConstraints cs = new GridBagConstraints();
 
-                JLabel lblChoosePlatform = new JLabel("Add funds:");
-                lblChoosePlatform.setFont(new Font("Optima", Font.PLAIN, 16));
+                JLabel lblChoosePlatform = new JLabel("Enter amount:");
+                lblChoosePlatform.setFont(new Font("Optima", Font.PLAIN, 20));
                 lblChoosePlatform.setForeground(new Color(0, 102, 255));
                 cs.gridx = 0;
                 cs.gridy = 0;
@@ -407,46 +407,37 @@ public class AccountPanel extends JPanel {
                 cs.gridwidth = 1;
                 cs.anchor = GridBagConstraints.CENTER;
                 fundsPanel.add(lblChoosePlatform, cs);
-
-                JScrollPane scrollPane = new JScrollPane();
-                String [] platforms = {"Xbox One", "Playstation 4", "Nintendo Switch", "PC"};
-                DefaultListModel<String> platformListModel = new DefaultListModel<String>();
-                for(int i = 0; i < platforms.length; i++)
-                    platformListModel.addElement(platforms[i]);
-                JList platformList = new JList(platformListModel);
-                platformList.setPreferredSize(new Dimension(200, 100));
-                scrollPane.setViewportView(platformList);
+                
+                JSpinner amountSpinner = new JSpinner();
+                String [] amounts = {"$5.00", "$10.00", "$25.00", "$50.00", "$100.00"};
+                SpinnerListModel amountModel = new SpinnerListModel(amounts);
+                amountSpinner.setModel(amountModel);
+                amountSpinner.setMinimumSize(new Dimension(80, 100));
                 
                 cs = new GridBagConstraints();
+                cs.fill = GridBagConstraints.HORIZONTAL;
                 cs.gridx = 0;
                 cs.gridy = 1;
                 cs.insets = new Insets(5, 10, 5, 10);
                 cs.gridwidth = 1;
                 cs.anchor = GridBagConstraints.CENTER;
-                fundsPanel.add(scrollPane, cs);
+                fundsPanel.add(amountSpinner, cs);
                 
-                JButton btnAdd = new JButton("Add");
+                JButton btnAdd = new JButton("Add funds");
                 btnAdd.setForeground(new Color(0, 102, 255));
                 btnAdd.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        int index = platformList.getSelectedIndex();
-                        String platform = platformListModel.getElementAt(index).toString();
+                        float balance = dbMgr.userBalance(username);
+                        balance += Float.parseFloat(((String)amountSpinner.getValue()).substring(1));
+                        dbMgr.updateBalance(username, balance);
                         
-                        if(dbMgr.checkUserPlatform(username, platform) == true) {
-                            JOptionPane.showMessageDialog(parentPanel,
-                                    "You already own this platform.",
-                                    "Platform not added",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return;
-                        } else {
-                            dbMgr.addPlatformToUser(username, platform);
-                            fundsDlg.dispose();
-                            JOptionPane.showMessageDialog(parentPanel,
-                                    "Platform added successfully.",
-                                    "Platform added",
-                                    JOptionPane.INFORMATION_MESSAGE);
-                            refreshPlatformList();
-                        }
+                        fundsDlg.dispose();
+                        JOptionPane.showMessageDialog(parentPanel,
+                                "Funds added successfully.",
+                                "Funds added",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        
+                        lblBalance.setText("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
                     }
                 });
                 

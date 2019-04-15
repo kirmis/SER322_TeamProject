@@ -697,19 +697,68 @@ public class DatabaseManager {
 
         return pubInfo;
     }
+    
+    /**
+     * Returns the developers for a specific game.
+     * 
+     * @param gameID the ID of the specific game
+     * @return list containing all the information for a developer
+     */
+    public List<List<String>> getDevelopersByGame(String gameID) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<List<String>> devInfo = new ArrayList<List<String>>(); // list for developer information
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("GET_DEVELOPERS_BY_GAME"));
+            stmt.setString(1, gameID);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ArrayList<String> currDev = new ArrayList<String>();
+                currDev.add(rs.getString(1));
+                currDev.add(rs.getString(2));
+                currDev.add(rs.getString(3));
+                devInfo.add(currDev);
+            }
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+                if (rs != null) rs.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return devInfo;
+    }
 
     /**
      * Returns the reviews for a specific game.
      * 
      * @param gameID the ID of the specific game
-     * @return list containing all the information for a publisher
+     * @return list containing all the information for a each review
      */
     public List<List<String>> getReviewsByGame(String gameID) {
         // declaring connections
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        List<List<String>> revInfo = new ArrayList<List<String>>(); // list for publisher information
+        List<List<String>> revInfo = new ArrayList<List<String>>(); // list for review information
 
         try {
             conn = connPool.getConnection(); // get new connection
