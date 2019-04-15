@@ -1361,11 +1361,11 @@ public class DatabaseManager {
             while (rs.next()) {
                 userInfo.add(rs.getString(1));
                 userInfo.add(rs.getString(2));
-                userInfo.add(rs.getString(3));
+                userInfo.add(Float.toString(rs.getFloat(3)));
                 userInfo.add(rs.getString(4));
                 userInfo.add(rs.getString(5));
                 userInfo.add(rs.getString(6));
-                userInfo.add(rs.getString(7));
+                userInfo.add(rs.getDate(7).toString());
             }
         } 
         catch (SQLException e1) {
