@@ -189,16 +189,18 @@ public class MainFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int index = gamesList.getSelectedIndex();
-                String gameName = gamesListModel.getElementAt(index).toString();
-                List<String> gameInfo = dbMgr.getGameInfoByName(gameName);
-                List<String> pubInfo = dbMgr.getPublisherByGame(gameInfo.get(0));
-                String gameText = gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
-                + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
-                + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
-                + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
-                
-                currentGamePane.setText(gameText);
-                refreshReviewList();
+                if(index > -1) {
+                    String gameName = gamesListModel.getElementAt(index).toString();
+                    List<String> gameInfo = dbMgr.getGameInfoByName(gameName);
+                    List<String> pubInfo = dbMgr.getPublisherByGame(gameInfo.get(0));
+                    String gameText = gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
+                    + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
+                    + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
+                    + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
+                    
+                    currentGamePane.setText(gameText);
+                    refreshReviewList();
+                }
             }
         });
         
@@ -224,7 +226,6 @@ public class MainFrame {
             public void actionPerformed(ActionEvent e) {
                 searchPane.setVisible(false);
                 contentPane.setVisible(true);
-                refreshGameList();
             }
         });
         btnBack.setBounds(16, 116, 122, 29);
