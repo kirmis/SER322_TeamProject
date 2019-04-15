@@ -139,6 +139,7 @@ public class MainFrame {
                 searchPane.setVisible(true);
                 contentPane.setVisible(false);
                 
+                lblBalance.setText("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username))); // refreshing balance
                 refreshGameSearchList(); // refreshing game search list
             }
         });
@@ -223,6 +224,7 @@ public class MainFrame {
             public void actionPerformed(ActionEvent e) {
                 searchPane.setVisible(false);
                 contentPane.setVisible(true);
+                refreshGameList();
             }
         });
         btnBack.setBounds(16, 116, 122, 29);
@@ -311,7 +313,6 @@ public class MainFrame {
                             dbMgr.addGameToUser(username, dbMgr.getGameID(getGame(gamesSearchList, gamesSearchListModel)));
                             lblBalance.setText("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
                             refreshGameSearchList();
-                            refreshGameList();
                         }
                     }
 
