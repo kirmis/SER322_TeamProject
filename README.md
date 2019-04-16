@@ -6,20 +6,20 @@ The Armory is a database application that represents a video game library, simil
 Origin. The application allows users to browse through a library of video games. Users of different 
 types (standard users, premium users, review users) will be able to login with a username and 
 password. Additionally, the application allows users to search for different games and see information
-relating to games such as the developer of the game, publisher of the game, the genre of a game, etc. 
+relating to games such as the developer of the game, publisher of the game, the genre of the game, etc. 
 Lastly, review users have the ability to review games and post their reviews to the application 
 so that other users can view them.
 
 When launching the application, a login window will appear asking for a username and password. To sign in,
-either use the username and password from the User table in TheArmoryDML.sql (ex. username: "john" password: 
+either use a username and password from the User table in TheArmoryDML.sql (ex. username: "john" password: 
 "password12"), or create a new user by clicking on the "Create user" button.
 
 
 <b>INSTRUCTIONS FOR SETTING UP APPLICATION:</b>
 
-1. **Create the database by loading the SQL Scripts: TheArmoryDDL.sql and TheArmoryDML.sql located in /SQL_Scripts/.**
+1. **Create the database by loading the SQL Scripts: TheArmoryDDL.sql and TheArmoryDML.sql located in ./SQL_Scripts/.**
    The seed script can also be used to generate a file to populate the tables. The seed script is a 
-   java file called ArmorySeedScript.java located in /SQL_Scripts/. The seed script can be compiled and
+   java file called ArmorySeedScript.java located in ./SQL_Scripts/. The seed script can be compiled and
    run using 'javac ArmorySeedScript.java' and 'java ArmorySeedScript'. The program will generate a file
    called 'GeneratedDML.sql' that can be sourced into the database.
 
@@ -35,6 +35,8 @@ either use the username and password from the User table in TheArmoryDML.sql (ex
 3. The application can be started through Gradle. **When in the home directory of the project, enter**
    **"gradle run" to launch the application.**
    
+   There is also an executable JAR (version date: 4/15/19) in the main directory that can be run instead
+   of using Gradle. 
 
 <b>INSTRUCTIONS FOR SETTING UP IN ECLIPSE:</b>
 
