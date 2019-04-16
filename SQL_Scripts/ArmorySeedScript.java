@@ -13,7 +13,7 @@ public class ArmorySeedScript {
 
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
         Scanner in = new Scanner(System.in);
-        System.out.println("Enter the total Amount of Users ( note this will be the largest Table) :");
+        System.out.println("Enter the total Amount of Users (note this will be the largest Table):");
 
         int x = in.nextInt();
 

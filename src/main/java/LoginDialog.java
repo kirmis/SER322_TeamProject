@@ -19,6 +19,13 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.border.LineBorder;
 
+/**
+ * Login dialog window for signing in to TheArmory application.
+ * 
+ * @author Alper Mencek, Manolito Ramirez, and Ryan Kirmis
+ * @version 1.0.0
+ */
+
 public class LoginDialog extends JDialog {
 
     private JTextField tfUsername;
@@ -34,7 +41,6 @@ public class LoginDialog extends JDialog {
 
     public LoginDialog(Frame parent, DatabaseManager dbmgr) {
         super(parent, "Login", true);
-        System.out.println("debug");
         username = null;
         this.parent = parent;
         JPanel panel = new JPanel(new GridBagLayout());
@@ -72,16 +78,16 @@ public class LoginDialog extends JDialog {
         btnLogin.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                if (dbmgr.login(tfUsername.getText().trim(), new String(pfPassword.getPassword()))) {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
-                            "Hi " + tfUsername.getText().trim() + "! You have successfully logged in.",
+                if (dbmgr.login(getUsernameField(), getPassword())) {
+                    JOptionPane.showMessageDialog(panel,
+                            "Hi " + getUsernameField() + "! You have successfully logged in.",
                             "Login",
                             JOptionPane.INFORMATION_MESSAGE);
                     succeeded = true;
-                    username = tfUsername.getText().trim();
+                    username = getUsernameField();
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
+                    JOptionPane.showMessageDialog(panel,
                             "Invalid username or password",
                             "Login",
                             JOptionPane.ERROR_MESSAGE);
@@ -105,49 +111,30 @@ public class LoginDialog extends JDialog {
 
             //getting username and passwored after create user button was pressed
             public void actionPerformed(ActionEvent e) {
-                if(true) {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
+                if(getUsernameField().equals("") || getPassword().equals("")) {
+                    JOptionPane.showMessageDialog(panel,
                             "Please enter a username and password",
                             "Login",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                boolean teacher = false;
-                int selection = JOptionPane.showConfirmDialog(LoginDialog.this,
-                        "Is the new user a Teacher?");
-                ////////////////////If yes, then create a user that is a teacher////////////////////////////              
-                if (selection == 0) {
-                    teacher = true;
-                    JOptionPane.showMessageDialog(LoginDialog.this,
-                            "Successfully created new teacher " + " please log in again",
-                            "Login",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-
-                //If cancel, then close dialog box
-                else if(selection == 2) {
-                    return;
-                }
-
-                else if(selection != 1) {
-                    return;
-                }
-
-                /////////////////////If no, then create user that is a student/////////////////////////////
-                if (selection != 0) {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
-                            "Successfully created new user " + " please log in again",
-                            "Login",
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-
-                else {
-                    JOptionPane.showMessageDialog(LoginDialog.this,
+                else if(dbmgr.userExists(getUsernameField())) {
+                    JOptionPane.showMessageDialog(panel,
                             "Username is taken, please enter a new username",
                             "Login",
                             JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
+                else{                    
+                    dbmgr.insertNewUser(getUsernameField(), getPassword());
+                    JOptionPane.showMessageDialog(panel,
+                            "Successfully created new user " + getUsernameField() + " please log in again",
+                            "Login",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+
             }
         });
 
@@ -187,6 +174,14 @@ public class LoginDialog extends JDialog {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getUsernameField() {
+        return tfUsername.getText().trim();
+    }
+
+    public String getPassword() {
+        return new String(pfPassword.getPassword());
     }
 }
 
