@@ -238,6 +238,8 @@ public class MainFrame {
             public void actionPerformed(ActionEvent e) {
                 searchPane.setVisible(false);
                 contentPane.setVisible(true);
+                
+                refreshGameList();
             }
         });
         btnBack.setBounds(16, 116, 122, 29);
