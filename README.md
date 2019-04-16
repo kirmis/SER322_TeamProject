@@ -10,6 +10,10 @@ relating to games such as the developer of the game, publisher of the game, the 
 Lastly, review users have the ability to review games and post their reviews to the application 
 so that other users can view them.
 
+When launching the application, a login window will appear asking for a username and password. To sign in,
+either use the username and password from the User table in TheArmoryDML.sql (ex. username: "john" password: 
+"password12"), or create a new user by clicking on the "Create user" button.
+
 
 <b>INSTRUCTIONS FOR SETTING UP APPLICATION:</b>
 
