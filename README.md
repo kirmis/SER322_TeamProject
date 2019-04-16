@@ -11,7 +11,7 @@ Lastly, review users have the ability to review games and post their reviews to 
 so that other users can view them.
 
 When launching the application, a login window will appear asking for a username and password. To sign in,
-either use the username and password from the User table in TheArmoryDML.sql (ex. username: "john" password: 
+either use a username and password from the User table in TheArmoryDML.sql (ex. username: "john" password: 
 "password12"), or create a new user by clicking on the "Create user" button.
 
 
@@ -36,7 +36,7 @@ either use the username and password from the User table in TheArmoryDML.sql (ex
    **"gradle run" to launch the application.**
    
    There is also an executable JAR (version date: 4/15/19) in the main directory that can be run instead
-   of using gradle. 
+   of using Gradle. 
 
 <b>INSTRUCTIONS FOR SETTING UP IN ECLIPSE:</b>
 
