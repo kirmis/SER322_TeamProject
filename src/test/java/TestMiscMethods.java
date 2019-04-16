@@ -13,7 +13,7 @@ import org.junit.Test;
 import main.java.DatabaseManager;
 
 /**
- * Testing all database manager methods that involve retrieving information
+ * Tests all database manager methods that involve retrieving information
  * other than User/Game records.
  * 
  * Note: This test case requires that the database must be populated 

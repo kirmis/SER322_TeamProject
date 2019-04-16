@@ -105,7 +105,7 @@ public class TestUserInfo {
     }
     
     /**
-     * Tests to see if user has a specific platform
+     * Tests to see if user has a specific platform.
      */
     @Test
     public void testCheckPlatform() {
