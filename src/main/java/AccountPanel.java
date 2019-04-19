@@ -465,6 +465,125 @@ public class AccountPanel extends JPanel {
         });
         add(btnAddFunds);
         
+        btnUpgradeAccount = new JButton("Upgrade account");
+        btnUpgradeAccount.setForeground(new Color(0, 102, 255));
+        btnUpgradeAccount.setBounds(523, 184, 150, 29);
+        btnUpgradeAccount.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Listener that allows the user to add funds to their account
+                
+                JDialog upgradeDlg = new JDialog();
+                
+                JPanel upgradePanel = new JPanel(new GridBagLayout());
+                upgradePanel.setBounds(0, 0, 300, 300);
+                upgradePanel.setBackground(Color.DARK_GRAY);
+                GridBagConstraints cs = new GridBagConstraints();
+
+                JButton btnStandard = new JButton("Change to Standard Membership");
+                btnStandard.setForeground(new Color(0, 102, 255));
+                btnStandard.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if(dbMgr.checkReviewUser(username)) {
+                            boolean result = dbMgr.removeReviewUser(username);
+                            
+                            if(result) {
+                                upgradeDlg.dispose();
+                                JOptionPane.showMessageDialog(parentPanel,
+                                        "Successfully changed from Review User to Standard User.",
+                                        "Change successful",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                upgradeDlg.dispose();
+                                JOptionPane.showMessageDialog(parentPanel,
+                                        "Error: Could not change from Review User to Standard User.",
+                                        "Change unsuccessful",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
+                        
+                        else if(dbMgr.checkPremiumUser(username)) {
+                            boolean result = dbMgr.removePremiumUser(username);
+                            
+                            if(result) {
+                                upgradeDlg.dispose();
+                                JOptionPane.showMessageDialog(parentPanel,
+                                        "Successfully changed from Premium User to Standard User.",
+                                        "Change successful",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                upgradeDlg.dispose();
+                                JOptionPane.showMessageDialog(parentPanel,
+                                        "Error: Could not change from Premium User to Standard User.",
+                                        "Change unsuccessful",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
+                    }
+                });
+                cs.gridx = 0;
+                cs.gridy = 0;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                upgradePanel.add(btnStandard, cs);
+                
+                JButton btnPremium = new JButton("Upgrade to Premium Membership");
+                btnPremium.setForeground(new Color(0, 102, 255));
+                btnPremium.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        dbMgr.insertPremiumUser(username, true, true, new java.sql.Date((new java.util.Date()).getTime()));
+                        upgradeDlg.dispose();
+                        JOptionPane.showMessageDialog(parentPanel,
+                                "Successfully upgraded to Premium Membership.",
+                                "Upgrade successful",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
+                cs = new GridBagConstraints();
+                cs.fill = GridBagConstraints.HORIZONTAL;
+                cs.gridx = 0;
+                cs.gridy = 1;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                upgradePanel.add(btnPremium, cs);
+                
+                JButton btnReview = new JButton("Upgrade to Review Membership");
+                btnReview.setForeground(new Color(0, 102, 255));
+                btnReview.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        dbMgr.insertReviewUser(username, true);
+                        upgradeDlg.dispose();
+                        JOptionPane.showMessageDialog(parentPanel,
+                                "Successfully upgraded to Review Membership.",
+                                "Upgrade successful",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
+                cs = new GridBagConstraints();
+                cs.gridx = 0;
+                cs.gridy = 2;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                upgradePanel.add(btnReview, cs);
+                
+                if(dbMgr.checkPremiumUser(username))
+                    btnPremium.setEnabled(false);
+                if(dbMgr.checkReviewUser(username))
+                    btnReview.setEnabled(false);
+                if(!dbMgr.checkPremiumUser(username) && !dbMgr.checkReviewUser(username))
+                    btnStandard.setEnabled(false);
+                
+                upgradeDlg.setBounds(0, 0, 300, 300);
+                upgradeDlg.setLocationRelativeTo(parentPanel);
+                
+                upgradeDlg.getContentPane().add(upgradePanel);
+                upgradeDlg.setVisible(true);
+            }
+        });
+        add(btnUpgradeAccount);
+        
         refreshCardInfo();
     }
     

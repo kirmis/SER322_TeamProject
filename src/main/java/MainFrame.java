@@ -564,4 +564,12 @@ public class MainFrame {
         else 
             return "user";
     }
+    
+    /**
+     * Refreshes UI displaying the user's rank.
+     */
+    public void refreshRank() {
+        rank = getRank();
+        lblUserTitle.setText(username + " - " + rank);
+    }
 }
