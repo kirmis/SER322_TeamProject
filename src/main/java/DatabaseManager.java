@@ -460,6 +460,86 @@ public class DatabaseManager {
 
         return result;
     }
+    
+    /**
+     * Removes given premium user.
+     * 
+     * @param username the username
+     * @return result of the transaction
+     */
+    public boolean removePremiumUser(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        boolean result = true;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("REMOVE_PREMIUM_USER"));
+            stmt.setString(1, username);
+
+            stmt.executeUpdate();
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+            result = false; // set return to false
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+    
+    /**
+     * Removes given review user.
+     * 
+     * @param username the username
+     * @return result of the transaction
+     */
+    public boolean removeReviewUser(String username) {
+        // declaring connections
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        boolean result = true;
+
+        try {
+            conn = connPool.getConnection(); // get new connection
+
+            stmt = conn.prepareStatement((String) queries.get("REMOVE_REVIEW_USER"));
+            stmt.setString(1, username);
+
+            stmt.executeUpdate();
+        } 
+        catch (SQLException e1) {
+            System.out.println("ERROR: Could not retrieve connection to TheArmory database.");
+            e1.printStackTrace();
+            result = false; // set return to false
+        } 
+        finally {
+            try {
+                // closing connections
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+            } 
+            catch (SQLException e1) {
+                System.out.println("ERROR: Connection to database could not be closed");
+                e1.printStackTrace();
+            }
+        }
+
+        return result;
+    }
 
     /**
      * Gets all game titles that a user owns.
@@ -1406,11 +1486,11 @@ public class DatabaseManager {
             while (rs.next()) {
                 userInfo.add(rs.getString(1));
                 userInfo.add(rs.getString(2));
-                userInfo.add(Float.toString(rs.getFloat(3)));
+                userInfo.add(rs.getString(3));
                 userInfo.add(rs.getString(4));
                 userInfo.add(rs.getString(5));
                 userInfo.add(rs.getString(6));
-                userInfo.add(rs.getDate(7).toString());
+                userInfo.add(rs.getString(7));
             }
         } 
         catch (SQLException e1) {
