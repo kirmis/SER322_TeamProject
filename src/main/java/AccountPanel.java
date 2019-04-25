@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultListModel;
@@ -39,6 +42,7 @@ public class AccountPanel extends JPanel {
     private DatabaseManager dbMgr;
     private String username;
     private String rank;
+    private MainFrame mainFrame;
     private JPanel parentPanel;
     private JLabel lblTheArmory;
     private JLabel lblCardInformation;
@@ -62,11 +66,13 @@ public class AccountPanel extends JPanel {
     /**
      * Sets up account panel.
      * 
+     * @param mainFrame the main application class
      * @param parentPanel the main panel of the application
      * @param dbMgr the database manager
      * @param username the current user's username
      */
-    public AccountPanel(JPanel parentPanel, DatabaseManager dbMgr, String username, String rank) {
+    public AccountPanel(MainFrame mainFrame, JPanel parentPanel, DatabaseManager dbMgr, String username, String rank) {
+        this.mainFrame = mainFrame;
         this.parentPanel = parentPanel;
         this.username = username;
         this.rank = rank;
@@ -411,19 +417,33 @@ public class AccountPanel extends JPanel {
                 cs.gridx = 0;
                 cs.gridy = 0;
                 cs.insets = new Insets(5, 10, 5, 10);
-                cs.gridwidth = 1;
+                cs.gridwidth = 2;
                 cs.anchor = GridBagConstraints.CENTER;
                 fundsPanel.add(lblChoosePlatform, cs);
                 
+                JLabel lblCurrency = new JLabel("$");
+                lblCurrency.setFont(new Font("Optima", Font.PLAIN, 20));
+                lblCurrency.setForeground(new Color(0, 102, 255));
+                cs.gridx = 0;
+                cs.gridy = 1;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                fundsPanel.add(lblCurrency, cs);
+                
+                // update: 4/23/19 - changed spinner to number model
                 JSpinner amountSpinner = new JSpinner();
-                String [] amounts = {"$5.00", "$10.00", "$25.00", "$50.00", "$100.00"};
-                SpinnerListModel amountModel = new SpinnerListModel(amounts);
+                SpinnerNumberModel amountModel = new SpinnerNumberModel(5.00, 0.00, 500.00, 1.00);
+                amountSpinner.setModel(amountModel);
+                JSpinner.NumberEditor amountEditor = (JSpinner.NumberEditor) amountSpinner.getEditor();
+                NumberFormat currencyFormat = amountEditor.getFormat();
+                currencyFormat.setMinimumFractionDigits(2);
                 amountSpinner.setModel(amountModel);
                 amountSpinner.setMinimumSize(new Dimension(80, 100));
                 
                 cs = new GridBagConstraints();
                 cs.fill = GridBagConstraints.HORIZONTAL;
-                cs.gridx = 0;
+                cs.gridx = 1;
                 cs.gridy = 1;
                 cs.insets = new Insets(5, 10, 5, 10);
                 cs.gridwidth = 1;
@@ -435,7 +455,7 @@ public class AccountPanel extends JPanel {
                 btnAdd.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         float balance = dbMgr.userBalance(username);
-                        balance += Float.parseFloat(((String)amountSpinner.getValue()).substring(1));
+                        balance += (Double)amountSpinner.getValue();
                         dbMgr.updateBalance(username, balance);
                         
                         fundsDlg.dispose();
@@ -452,7 +472,7 @@ public class AccountPanel extends JPanel {
                 cs.gridx = 0;
                 cs.gridy = 2;
                 cs.insets = new Insets(5, 10, 5, 10);
-                cs.gridwidth = 1;
+                cs.gridwidth = 2;
                 cs.anchor = GridBagConstraints.CENTER;
                 fundsPanel.add(btnAdd, cs);
                 
@@ -499,9 +519,11 @@ public class AccountPanel extends JPanel {
                                         "Change unsuccessful",
                                         JOptionPane.INFORMATION_MESSAGE);
                             }
+                            
+                            mainFrame.setReviewButton();
                         }
                         
-                        else if(dbMgr.checkPremiumUser(username)) {
+                        if(dbMgr.checkPremiumUser(username)) {
                             boolean result = dbMgr.removePremiumUser(username);
                             
                             if(result) {
@@ -518,6 +540,9 @@ public class AccountPanel extends JPanel {
                                         JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
+                        
+                        mainFrame.refreshRank();
+                        mainFrame.setReviewButton();
                     }
                 });
                 cs.gridx = 0;
@@ -531,12 +556,36 @@ public class AccountPanel extends JPanel {
                 btnPremium.setForeground(new Color(0, 102, 255));
                 btnPremium.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        dbMgr.insertPremiumUser(username, true, true, new java.sql.Date((new java.util.Date()).getTime()));
                         upgradeDlg.dispose();
-                        JOptionPane.showMessageDialog(parentPanel,
-                                "Successfully upgraded to Premium Membership.",
-                                "Upgrade successful",
-                                JOptionPane.INFORMATION_MESSAGE);
+                        
+                        float balance = dbMgr.userBalance(username);
+                        if(balance > 10) {
+                            int selection = JOptionPane.showConfirmDialog(parentPanel,
+                                    "Are you sure you want to upgrade to a Premium membership? \nThe membership costs $10");
+                            if(selection == 0) {
+                                dbMgr.updateBalance(username, balance-10);
+                                dbMgr.insertPremiumUser(username, true, true, new java.sql.Date((new java.util.Date()).getTime()));
+                                JOptionPane.showMessageDialog(parentPanel,
+                                        "Successfully upgraded to Premium Membership.",
+                                        "Upgrade successful",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                                lblBalance.setText("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
+                            }
+                        }
+
+                        else {
+                            JOptionPane.showMessageDialog(parentPanel,
+                                    "Your funds are not sufficient, please add more funds to your wallet",
+                                    "Insufficient Funds",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        
+                        if(dbMgr.checkReviewUser(username)) 
+                            dbMgr.removeReviewUser(username);
+                        
+                        mainFrame.refreshRank();
+                        mainFrame.setReviewButton();
                     }
                 });
                 cs = new GridBagConstraints();
@@ -552,12 +601,36 @@ public class AccountPanel extends JPanel {
                 btnReview.setForeground(new Color(0, 102, 255));
                 btnReview.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        dbMgr.insertReviewUser(username, true);
                         upgradeDlg.dispose();
-                        JOptionPane.showMessageDialog(parentPanel,
-                                "Successfully upgraded to Review Membership.",
-                                "Upgrade successful",
-                                JOptionPane.INFORMATION_MESSAGE);
+                        
+                        float balance = dbMgr.userBalance(username);
+                        if(balance > 20) {
+                            int selection = JOptionPane.showConfirmDialog(parentPanel,
+                                    "Are you sure you want to upgrade to a Review membership? \nThe membership costs $20");
+                            if(selection == 0) {
+                                dbMgr.updateBalance(username, balance-20);
+                                dbMgr.insertReviewUser(username, true);
+                                JOptionPane.showMessageDialog(parentPanel,
+                                        "Successfully upgraded to Review Membership.",
+                                        "Upgrade successful",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                                lblBalance.setText("Wallet: $" + String.format("%.2f", dbMgr.userBalance(username)));
+                            }
+                        }
+
+                        else {
+                            JOptionPane.showMessageDialog(parentPanel,
+                                    "Your funds are not sufficient, please add more funds to your wallet",
+                                    "Insufficient Funds",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                        
+                        if(dbMgr.checkPremiumUser(username)) 
+                            dbMgr.removePremiumUser(username);
+                        
+                        mainFrame.refreshRank();
+                        mainFrame.setReviewButton();
                     }
                 });
                 cs = new GridBagConstraints();

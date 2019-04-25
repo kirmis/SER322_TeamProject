@@ -135,7 +135,7 @@ public class MainFrame {
         searchPane.setVisible(false);
         
         // initializing pane for chaning account information
-        accountPane = new AccountPanel(contentPane, dbMgr, username, rank);
+        accountPane = new AccountPanel(this, contentPane, dbMgr, username, rank);
         accountPane.setVisible(false);
 
         lblTheArmory = new JLabel("The Armory");
@@ -354,107 +354,106 @@ public class MainFrame {
         reviewList.setFont(new Font("Lao MN", Font.PLAIN, 12));
         reviewList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
         
-        // if user is a review user
-        if(dbMgr.checkReviewUser(username)) {
-            btnReviewGame = new JButton("Review game");
-            btnReviewGame.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if(gamesList.isSelectionEmpty()) {
-                        JOptionPane.showMessageDialog(contentPane,
-                                "You have not selected a game to review.",
-                                "No game selected",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    JDialog reviewDlg = new JDialog();
-                    
-                    JPanel reviewPanel = new JPanel(new GridBagLayout());
-                    reviewPanel.setBounds(0, 0, 300, 300);
-                    reviewPanel.setBackground(Color.DARK_GRAY);
-                    GridBagConstraints cs = new GridBagConstraints();
-
-                    JLabel lblReviewTitle = new JLabel("Enter review title:");
-                    lblReviewTitle.setFont(new Font("Optima", Font.PLAIN, 20));
-                    lblReviewTitle.setForeground(new Color(0, 102, 255));
-                    cs.gridx = 0;
-                    cs.gridy = 0;
-                    cs.insets = new Insets(5, 10, 5, 10);
-                    cs.gridwidth = 1;
-                    cs.anchor = GridBagConstraints.CENTER;
-                    reviewPanel.add(lblReviewTitle, cs);
-                    
-                    JTextField tfReviewTitle = new JTextField();
-                    cs = new GridBagConstraints();
-                    cs.fill = GridBagConstraints.HORIZONTAL;
-                    cs.gridx = 0;
-                    cs.gridy = 1;
-                    cs.insets = new Insets(5, 10, 5, 10);
-                    cs.gridwidth = 1;
-                    cs.anchor = GridBagConstraints.CENTER;
-                    reviewPanel.add(tfReviewTitle, cs);
-                    
-                    JLabel lblRating = new JLabel("Enter rating:");
-                    lblRating.setFont(new Font("Optima", Font.PLAIN, 20));
-                    lblRating.setForeground(new Color(0, 102, 255));
-                    cs = new GridBagConstraints();
-                    cs.gridx = 0;
-                    cs.gridy = 2;
-                    cs.insets = new Insets(5, 10, 5, 10);
-                    cs.gridwidth = 1;
-                    cs.anchor = GridBagConstraints.CENTER;
-                    reviewPanel.add(lblRating, cs);
-                    
-                    SpinnerNumberModel ratingModel = new SpinnerNumberModel(0.0, 0.0, 10.0, 0.1);
-                    JSpinner rating = new JSpinner(ratingModel);
-                    cs = new GridBagConstraints();
-                    cs.fill = GridBagConstraints.HORIZONTAL;
-                    cs.gridx = 0;
-                    cs.gridy = 3;
-                    cs.insets = new Insets(5, 10, 5, 10);
-                    cs.gridwidth = 1;
-                    cs.anchor = GridBagConstraints.CENTER;
-                    reviewPanel.add(rating, cs);
-                    
-                    JButton btnAdd = new JButton("Add review");
-                    btnAdd.setForeground(new Color(0, 102, 255));
-                    btnAdd.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            String gameID = dbMgr.getGameID(getGame(gamesList, gamesListModel));
-                            Date datePosted = new Date(Calendar.getInstance().getTime().getTime()); // getting current time
-                            
-                            dbMgr.insertReview(tfReviewTitle.getText(), (double)rating.getValue(), gameID, username, datePosted);
-
-                            reviewDlg.dispose();
-                            
-                            JOptionPane.showMessageDialog(contentPane,
-                                    "Review added successfully.",
-                                    "Review added",
-                                    JOptionPane.INFORMATION_MESSAGE);
-                            
-                            refreshReviewList();
-                        }
-                    });
-                    
-                    cs = new GridBagConstraints();
-                    cs.gridx = 0;
-                    cs.gridy = 5;
-                    cs.insets = new Insets(5, 10, 5, 10);
-                    cs.gridwidth = 1;
-                    cs.anchor = GridBagConstraints.CENTER;
-                    reviewPanel.add(btnAdd, cs);
-                    
-                    reviewDlg.setBounds(0, 0, 300, 300);
-                    reviewDlg.setLocationRelativeTo(contentPane);
-                    
-                    reviewDlg.getContentPane().add(reviewPanel);
-                    reviewDlg.setVisible(true);
+        btnReviewGame = new JButton("Review game");
+        btnReviewGame.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(gamesList.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(contentPane,
+                            "You have not selected a game to review.",
+                            "No game selected",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            });
-            btnReviewGame.setForeground(new Color(0, 102, 255));
-            btnReviewGame.setBounds(566, 444, 122, 29);
-            contentPane.add(btnReviewGame);
-        }
+                
+                JDialog reviewDlg = new JDialog();
+                
+                JPanel reviewPanel = new JPanel(new GridBagLayout());
+                reviewPanel.setBounds(0, 0, 300, 300);
+                reviewPanel.setBackground(Color.DARK_GRAY);
+                GridBagConstraints cs = new GridBagConstraints();
+
+                JLabel lblReviewTitle = new JLabel("Enter review title:");
+                lblReviewTitle.setFont(new Font("Optima", Font.PLAIN, 20));
+                lblReviewTitle.setForeground(new Color(0, 102, 255));
+                cs.gridx = 0;
+                cs.gridy = 0;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                reviewPanel.add(lblReviewTitle, cs);
+                
+                JTextField tfReviewTitle = new JTextField();
+                cs = new GridBagConstraints();
+                cs.fill = GridBagConstraints.HORIZONTAL;
+                cs.gridx = 0;
+                cs.gridy = 1;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                reviewPanel.add(tfReviewTitle, cs);
+                
+                JLabel lblRating = new JLabel("Enter rating:");
+                lblRating.setFont(new Font("Optima", Font.PLAIN, 20));
+                lblRating.setForeground(new Color(0, 102, 255));
+                cs = new GridBagConstraints();
+                cs.gridx = 0;
+                cs.gridy = 2;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                reviewPanel.add(lblRating, cs);
+                
+                SpinnerNumberModel ratingModel = new SpinnerNumberModel(0.0, 0.0, 10.0, 0.1);
+                JSpinner rating = new JSpinner(ratingModel);
+                cs = new GridBagConstraints();
+                cs.fill = GridBagConstraints.HORIZONTAL;
+                cs.gridx = 0;
+                cs.gridy = 3;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                reviewPanel.add(rating, cs);
+                
+                JButton btnAdd = new JButton("Add review");
+                btnAdd.setForeground(new Color(0, 102, 255));
+                btnAdd.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String gameID = dbMgr.getGameID(getGame(gamesList, gamesListModel));
+                        Date datePosted = new Date(Calendar.getInstance().getTime().getTime()); // getting current time
+                        
+                        dbMgr.insertReview(tfReviewTitle.getText(), (double)rating.getValue(), gameID, username, datePosted);
+
+                        reviewDlg.dispose();
+                        
+                        JOptionPane.showMessageDialog(contentPane,
+                                "Review added successfully.",
+                                "Review added",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        
+                        refreshReviewList();
+                    }
+                });
+                
+                cs = new GridBagConstraints();
+                cs.gridx = 0;
+                cs.gridy = 5;
+                cs.insets = new Insets(5, 10, 5, 10);
+                cs.gridwidth = 1;
+                cs.anchor = GridBagConstraints.CENTER;
+                reviewPanel.add(btnAdd, cs);
+                
+                reviewDlg.setBounds(0, 0, 300, 300);
+                reviewDlg.setLocationRelativeTo(contentPane);
+                
+                reviewDlg.getContentPane().add(reviewPanel);
+                reviewDlg.setVisible(true);
+            }
+        });
+        btnReviewGame.setForeground(new Color(0, 102, 255));
+        btnReviewGame.setBounds(566, 444, 122, 29);
+        contentPane.add(btnReviewGame);
+        
+        setReviewButton();
 
         frame.getContentPane().add(contentPane);
         frame.getContentPane().add(searchPane);
@@ -571,5 +570,15 @@ public class MainFrame {
     public void refreshRank() {
         rank = getRank();
         lblUserTitle.setText(username + " - " + rank);
+    }
+    
+    /**
+     * Shows the "Review" option if the user is a Review user.
+     */
+    public void setReviewButton() {
+        if(dbMgr.checkReviewUser(username)) 
+            btnReviewGame.setVisible(true);
+        else
+            btnReviewGame.setVisible(false);
     }
 }
