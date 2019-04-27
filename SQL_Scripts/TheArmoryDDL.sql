@@ -120,3 +120,8 @@ CREATE TABLE Available_on(
 );
 
 ALTER TABLE Developer ADD FOREIGN KEY(developerID, mainBranch) REFERENCES Developer_branch(developerID, branchID);
+
+CREATE INDEX gName ON Game(gameName);
+CREATE INDEX pubName ON Publisher(publisherName);
+CREATE INDEX devName ON Developer(developerName);
+CREATE INDEX rating ON Review(rating);

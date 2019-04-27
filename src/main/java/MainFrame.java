@@ -66,6 +66,8 @@ public class MainFrame {
     private JButton btnBack;
     private JButton btnAccount;
     private JButton btnReviewGame;
+    private JScrollPane currentGameScrollPane;
+    private JScrollPane searchGameScrollPane;
 
     private DefaultListModel<String> gamesListModel;
     private DefaultListModel<String> gamesSearchListModel;
@@ -182,12 +184,12 @@ public class MainFrame {
         scrollPane.setBounds(16, 213, 303, 445);
         contentPane.add(scrollPane);
 
-        JScrollPane scrollPane2 = new JScrollPane();
-        scrollPane2.setBounds(341, 213, 342, 227);
-        contentPane.add(scrollPane2);
+        currentGameScrollPane = new JScrollPane();
+        currentGameScrollPane.setBounds(341, 213, 342, 240);
+        contentPane.add(currentGameScrollPane);
 
         currentGamePane = new JTextPane();
-        scrollPane2.setViewportView(currentGamePane);
+        currentGameScrollPane.setViewportView(currentGamePane);
         currentGamePane.setFont(new Font("Lao MN", Font.PLAIN, 16));
         currentGamePane.setEditable(false);
         currentGamePane.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
@@ -208,9 +210,15 @@ public class MainFrame {
                     String gameText = gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
                     + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
                     + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
-                    + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
+                    + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2)  + "\nDeveloper(s): ";
+                    
+                    List<List<String>> developers = dbMgr.getDevelopersByGame(gameInfo.get(0));
+                    for(int i = 0; i < developers.size(); i++) {
+                        gameText += "\n\f\f" + developers.get(i).get(1);
+                    }
                     
                     currentGamePane.setText(gameText);
+                    currentGamePane.setCaretPosition(0);
                     refreshReviewList();
                 }
             }
@@ -262,9 +270,9 @@ public class MainFrame {
         scrollPane4.setBounds(16, 213, 303, 445);
         searchPane.add(scrollPane4);
 
-        JScrollPane scrollPane5 = new JScrollPane();
-        scrollPane5.setBounds(341, 213, 342, 227);
-        searchPane.add(scrollPane5);
+        searchGameScrollPane = new JScrollPane();
+        searchGameScrollPane.setBounds(341, 213, 342, 240);
+        searchPane.add(searchGameScrollPane);
 
         gamesSearchListModel = new DefaultListModel<String>();
         gamesSearchList = new JList();
@@ -284,9 +292,15 @@ public class MainFrame {
                     String gameText = gameInfo.get(1) + "\n\nGame ID: " + gameInfo.get(0)
                     + "\nRelease date: " + gameInfo.get(2) + "\nReview release date: "
                     + gameInfo.get(3) + "\nPrice: $" + gameInfo.get(4) + "\nPublisher: "
-                    + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2);
+                    + pubInfo.get(1) + "\n\f\fLocation: " + pubInfo.get(2) + "\nDeveloper(s): ";
+                    
+                    List<List<String>> developers = dbMgr.getDevelopersByGame(gameInfo.get(0));
+                    for(int i = 0; i < developers.size(); i++) {
+                        gameText += "\n\f\f" + developers.get(i).get(1);
+                    }
                     
                     currentSearchPane.setText(gameText);
+                    currentSearchPane.setCaretPosition(0);
                     refreshSearchReviewList();
                 }
                 catch(Exception ex) {}
@@ -302,7 +316,7 @@ public class MainFrame {
         searchPane.add(scrollPane6);
                
         currentSearchPane = new JTextPane();
-        scrollPane5.setViewportView(currentSearchPane);
+        searchGameScrollPane.setViewportView(currentSearchPane);
         currentSearchPane.setFont(new Font("Lao MN", Font.PLAIN, 16));
         currentSearchPane.setEditable(false);
         currentSearchPane.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
@@ -450,7 +464,7 @@ public class MainFrame {
             }
         });
         btnReviewGame.setForeground(new Color(0, 102, 255));
-        btnReviewGame.setBounds(566, 444, 122, 29);
+        btnReviewGame.setBounds(566, 455, 122, 29);
         contentPane.add(btnReviewGame);
         
         setReviewButton();

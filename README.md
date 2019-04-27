@@ -35,7 +35,7 @@ either use a username and password from the User table in TheArmoryDML.sql (ex. 
 3. The application can be started through Gradle. **When in the home directory of the project, enter**
    **"gradle run" to launch the application.**
    
-   There is also an executable JAR (version date: 4/15/19) in the main directory that can be run instead
+   There is also an executable JAR (version date: 4/26/19) in the main directory that can be run instead
    of using Gradle. 
 
 <b>INSTRUCTIONS FOR SETTING UP IN ECLIPSE:</b>

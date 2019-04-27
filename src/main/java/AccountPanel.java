@@ -541,6 +541,8 @@ public class AccountPanel extends JPanel {
                             }
                         }
                         
+                        rank = mainFrame.getRank();
+                        lblAccountType.setText("Account type: " + rank);
                         mainFrame.refreshRank();
                         mainFrame.setReviewButton();
                     }
@@ -575,7 +577,8 @@ public class AccountPanel extends JPanel {
 
                         else {
                             JOptionPane.showMessageDialog(parentPanel,
-                                    "Your funds are not sufficient, please add more funds to your wallet",
+                                    "Your funds are not sufficient - a Premium membership costs $10."
+                                    + "\nPlease add more funds to your wallet",
                                     "Insufficient Funds",
                                     JOptionPane.ERROR_MESSAGE);
                             return;
@@ -584,6 +587,8 @@ public class AccountPanel extends JPanel {
                         if(dbMgr.checkReviewUser(username)) 
                             dbMgr.removeReviewUser(username);
                         
+                        rank = mainFrame.getRank();
+                        lblAccountType.setText("Account type: " + rank);
                         mainFrame.refreshRank();
                         mainFrame.setReviewButton();
                     }
@@ -620,7 +625,8 @@ public class AccountPanel extends JPanel {
 
                         else {
                             JOptionPane.showMessageDialog(parentPanel,
-                                    "Your funds are not sufficient, please add more funds to your wallet",
+                                    "Your funds are not sufficient - a Review membership costs $20."
+                                    + "\nPlease add more funds to your wallet",
                                     "Insufficient Funds",
                                     JOptionPane.ERROR_MESSAGE);
                             return;
@@ -629,6 +635,8 @@ public class AccountPanel extends JPanel {
                         if(dbMgr.checkPremiumUser(username)) 
                             dbMgr.removePremiumUser(username);
                         
+                        rank = mainFrame.getRank();
+                        lblAccountType.setText("Account type: " + rank);
                         mainFrame.refreshRank();
                         mainFrame.setReviewButton();
                     }
